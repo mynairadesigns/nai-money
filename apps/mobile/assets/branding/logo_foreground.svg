@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Moneymind adaptive icon foreground layer.
+  Transparent 1024×1024 canvas; 3 bars sized to live inside Android's
+  inner 66.7% safe zone (170..854 in each axis) — outer 33.3% may be
+  masked by the launcher shape. Background layer is solid Warm Clay
+  via `adaptive_icon_background: "#8a4f37"` in pubspec.yaml.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <g fill="#fff8f5">
+    <rect x="379" y="529" width="61" height="239" rx="30" ry="30"/>
+    <rect x="481" y="392" width="61" height="376" rx="30" ry="30"/>
+    <rect x="583" y="256" width="61" height="512" rx="30" ry="30"/>
+  </g>
+</svg>

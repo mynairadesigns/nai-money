@@ -1,0 +1,7 @@
+# Internal-only docs — excluded from the buyer distribution zip (git archive).
+# Buyer-facing docs (docs/REVENUECAT_SETUP.md, apps/mobile/README.md, the
+# docs/codecanyon/*.html pages, code-level READMEs) intentionally stay in the archive.
+CLAUDE.md                  export-ignore
+docs/PRD.md                export-ignore
+docs/DESIGN.md             export-ignore
+docs/codecanyon/product.md export-ignore

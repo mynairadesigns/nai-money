@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Moneymind — Documentation</title>
+<style>
+  :root{
+    --brand:#8a4f37; --brand-dark:#582712; --brand-soft:#b0694a;
+    --surface:#fff8f5; --bg:#ffffff; --text:#1e1b18; --text-muted:#53433e;
+    --border:#d8c2bb; --secondary:#526256; --accent:#615e57;
+    --success:#526256; --warning:#b65b00; --error:#ba1a1a;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; background:var(--bg); color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    line-height:1.6; font-size:16px;
+  }
+  header{
+    background:linear-gradient(135deg,var(--brand),var(--brand-soft));
+    color:#fff; padding:56px 24px; text-align:center;
+  }
+  header h1{margin:0 0 8px; font-size:2.4rem; letter-spacing:-.5px}
+  header p{margin:0; opacity:.95; font-size:1.1rem}
+  header .v{display:inline-block;margin-top:16px;padding:4px 14px;border-radius:999px;
+    background:rgba(255,255,255,.18);font-size:.85rem}
+  .wrap{max-width:920px; margin:0 auto; padding:0 24px}
+  nav.toc{
+    display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+    gap:10px; margin:32px auto;
+  }
+  nav.toc a{
+    display:block; padding:12px 14px; background:var(--surface);
+    border:1px solid var(--border); border-radius:12px; text-decoration:none;
+    color:var(--text); font-size:.92rem; transition:.15s;
+  }
+  nav.toc a:hover{border-color:var(--brand); color:var(--brand)}
+  nav.toc a span{color:var(--brand); font-weight:700; margin-right:6px}
+  section{padding:28px 0; border-top:1px solid var(--border)}
+  section:first-of-type{border-top:none}
+  h2{font-size:1.5rem; margin:0 0 14px; color:var(--brand-dark)}
+  h3{font-size:1.1rem; margin:22px 0 8px}
+  p,li{color:var(--text)}
+  a{color:var(--brand)}
+  code{
+    font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    background:var(--surface); border:1px solid var(--border);
+    border-radius:6px; padding:1px 6px; font-size:.86em; color:var(--brand-dark);
+  }
+  pre{
+    background:#1e1b18; color:#f3e9e3; border-radius:12px; padding:16px 18px;
+    overflow:auto; font-size:.86rem; line-height:1.5;
+  }
+  pre code{background:none;border:none;color:inherit;padding:0}
+  table{width:100%; border-collapse:collapse; margin:14px 0;
+    border:1px solid var(--border); border-radius:12px; overflow:hidden}
+  th,td{text-align:left; padding:10px 12px; font-size:.9rem; vertical-align:top}
+  th{background:var(--brand); color:#fff; font-weight:600}
+  tbody tr:nth-child(even){background:var(--surface)}
+  td code{white-space:nowrap}
+  .note,.warn{border-radius:12px; padding:14px 16px; margin:16px 0; font-size:.92rem}
+  .note{background:#eef3ef; border-left:4px solid var(--secondary)}
+  .warn{background:#fdf3e7; border-left:4px solid var(--warning)}
+  .note strong,.warn strong{color:var(--brand-dark)}
+  ul{padding-left:20px}
+  footer{padding:40px 24px; text-align:center; color:var(--text-muted); font-size:.88rem}
+  .pill{display:inline-block;padding:2px 10px;border-radius:999px;background:var(--surface);
+    border:1px solid var(--border);font-size:.8rem;margin:2px}
+</style>
+</head>
+<body>
+<header>
+  <h1>Moneymind</h1>
+  <p>AI-Powered Personal Finance App — Flutter + Firebase</p>
+  <div class="v">Documentation · v1.0.0</div>
+</header>
+
+<div class="wrap">
+<nav class="toc">
+  <a href="#overview"><span>1</span>Overview</a>
+  <a href="#included"><span>2</span>What's included</a>
+  <a href="#features"><span>3</span>Features</a>
+  <a href="#architecture"><span>4</span>Architecture</a>
+  <a href="#quick"><span>5</span>Quick setup</a>
+  <a href="#firebase"><span>6</span>Firebase project setup</a>
+  <a href="#social"><span>7</span>Social sign-in setup</a>
+  <a href="#functions"><span>8</span>Cloud Functions &amp; secrets</a>
+  <a href="#rc"><span>9</span>Remote Config keys</a>
+  <a href="#ai"><span>10</span>AI provider setup</a>
+  <a href="#monet"><span>11</span>Monetization setup</a>
+  <a href="#admin"><span>12</span>Admin panel (optional)</a>
+  <a href="#brand"><span>13</span>Branding &amp; customization</a>
+  <a href="#build"><span>14</span>Build &amp; release</a>
+  <a href="#signing"><span>15</span>App signing</a>
+  <a href="#prod"><span>16</span>Production checklist</a>
+  <a href="#changelog"><span>17</span>Changelog</a>
+  <a href="#support"><span>18</span>Support</a>
+</nav>
+
+<section id="overview">
+  <h2>1 · Overview</h2>
+  <p><strong>Moneymind</strong> is an AI-powered personal finance app shipped as
+  production-grade source code: one <strong>Flutter</strong> mobile app
+  (<code>apps/mobile</code>) plus a <strong>Firebase Cloud Functions</strong>
+  backend (<code>apps/functions</code>). It is <strong>single-user personal
+  finance</strong> — one account tracks their own money. It is <em>not</em>
+  multi-user, family-sharing, or a marketplace.</p>
+  <p>The differentiator is that the AI is <strong>actually functional</strong>,
+  not a UI mockup. Receipt scanning, a finance coach, forecasting, smart
+  categorization, anomaly detection, a health score, and budget/savings
+  generators all run for real — through a <strong>dual OpenAI + Gemini</strong>
+  backend, switchable at runtime via Remote Config. Every model call is
+  <strong>server-side</strong>, so <strong>no AI API keys ever ship in the
+  APK/IPA</strong>.</p>
+  <p>Architecture is <strong>offline-first</strong>: the on-device
+  Drift/SQLCipher database is the source of truth, and Firestore is used for
+  reconciliation/sync — so the core app works with no network, and AI entry
+  points degrade gracefully when offline.</p>
+</section>
+
+<section id="included">
+  <h2>2 · What's included</h2>
+  <ul>
+    <li>Full <strong>Flutter</strong> source (<code>apps/mobile</code>) +
+      <strong>Firebase Functions</strong> source (<code>apps/functions</code>)</li>
+    <li>Drift (SQLite + SQLCipher) schema &amp; migrations, with the mirrored
+      Firestore schema, security rules, and the one declared composite index</li>
+    <li><strong>Warm Minimalist</strong> design system — Material 3
+      <code>ColorScheme</code>, Sora type scale, shape + spacing tokens; light,
+      dark, and system modes</li>
+    <li><strong>18 Cloud Functions</strong> — 9 AI callables, 2 subscription
+      callables, FX rate, RevenueCat webhook + entitlement refresh, 3
+      schedulers, 1 auth trigger</li>
+    <li><strong>Next.js admin panel</strong> (<code>apps/admin</code>) — an
+      optional operations console: users, AI spend, a validated Remote Config
+      editor, billing, system health, audit log, and access control (§12)</li>
+    <li>Server-side <strong>AI quota + rate limiting</strong> with a premium bypass</li>
+    <li><strong>RevenueCat</strong> subscription stack + <strong>AdMob</strong>
+      (banner + interstitial), both Remote-Config-gated</li>
+    <li><strong>App lock</strong> (PIN + biometric + auto-lock) and
+      <strong>local notifications</strong></li>
+    <li><strong>Google + Apple sign-in</strong> (Apple is iOS-only)</li>
+    <li>This documentation + the RevenueCat setup guide
+      (<code>docs/REVENUECAT_SETUP.md</code>)</li>
+    <li>6 months email support, lifetime updates</li>
+  </ul>
+</section>
+
+<section id="features">
+  <h2>3 · Features</h2>
+
+  <h3>Money management</h3>
+  <ul>
+    <li>Multi-wallet (cash / bank / card), each with its own currency</li>
+    <li>Transactions (income / expense / transfer) kept <strong>atomic with the
+      wallet balance</strong> in a single DB transaction</li>
+    <li>Multi-currency with a per-transaction FX rate — live via the
+      <code>getFxRate</code> callable, with a manual-entry fallback offline</li>
+    <li>Categories with custom icons/colors; budgets with progress + threshold
+      colour buckets; recurring rules auto-posted by a daily scheduler</li>
+    <li>Debts (lent / borrowed, payments, settle) and savings goals
+      (contributions, completion); reports via <code>fl_chart</code></li>
+  </ul>
+
+  <h3>AI features (server-side, functional)</h3>
+  <ul>
+    <li><strong>Receipt scanner</strong> — <code>scanReceipt</code> (GPT-4o Vision)
+      extracts merchant, amount, date, line items from a photo</li>
+    <li><strong>Smart categorization</strong> — <code>suggestCategory</code></li>
+    <li><strong>Finance coach chat</strong> — <code>aiCoachChat</code>
+      (RAG over the user's own data)</li>
+    <li><strong>Forecast</strong>, <strong>anomaly detection</strong>,
+      <strong>health score</strong> — <code>forecastSpending</code>,
+      <code>detectAnomalies</code>, <code>computeHealthScore</code></li>
+    <li><strong>Weekly recap</strong>, <strong>AI budget generator</strong>,
+      <strong>savings plan</strong> — <code>generateWeeklyRecap</code>,
+      <code>generateBudgetPlan</code> (bulk-creates budgets),
+      <code>generateSavingsPlan</code></li>
+    <li><strong>Subscription detector</strong> —
+      <code>detectSubscriptions</code> + <code>confirmSubscription</code>
+      (90-day pattern match, no LLM)</li>
+  </ul>
+
+  <h3>Monetization</h3>
+  <ul>
+    <li>RevenueCat subscriptions — paywall, restore, entitlement sync via the
+      webhook (authoritative) + a client fast-path</li>
+    <li>AdMob banner (Home) + interstitial (every Nth transaction add)</li>
+    <li>Free-tier ceilings — wallets &amp; monthly transactions enforced on the
+      client, AI enforced on the server; premium bypasses all of them</li>
+  </ul>
+
+  <h3>Operations (admin panel)</h3>
+  <ul>
+    <li>Optional <strong>Next.js console</strong> (<code>apps/admin</code>) —
+      user growth, AI spend, billing, system health, audit log (§12)</li>
+    <li><strong>Validated Remote Config editor</strong> — typed values, drift
+      detection against what the code actually reads, and an ETag-guarded
+      publish so a concurrent console edit cannot be clobbered</li>
+    <li>Gated by a Firebase Auth <strong>custom claim</strong>; all reads are
+      server-side, so your security rules stay unchanged</li>
+    <li><strong>Demo mode</strong> makes it read-only for screenshots or
+      show-and-tell</li>
+  </ul>
+
+  <h3>Security &amp; polish</h3>
+  <ul>
+    <li>App lock — salted SHA-256 PIN in secure storage, biometric via
+      <code>local_auth</code>, configurable auto-lock</li>
+    <li>Local notifications — budget / recurring / debt / goal thresholds +
+      a weekly recap</li>
+    <li>Settings — profile, JSON backup/export, reset data, about; full
+      light/dark theming; Google + Apple sign-in</li>
+  </ul>
+
+  <h3>Backend (Firebase Functions, <code>asia-southeast1</code>)</h3>
+  <ul>
+    <li>Every AI callable follows <strong>auth → rate-limit → quota → provider →
+      JSON-validate</strong></li>
+    <li>Prompts centralized in <code>src/prompts/</code>; dual provider behind one
+      interface in <code>src/providers/</code></li>
+    <li>Schedulers: <code>processRecurringRules</code> (daily),
+      <code>resetMonthlyAIQuotas</code> (monthly GC); the RevenueCat webhook is
+      the authoritative entitlement writer</li>
+  </ul>
+</section>
+
+<section id="architecture">
+  <h2>4 · Architecture</h2>
+  <pre><code>money-mind/
+  apps/
+    mobile/      Flutter app (Riverpod 3 + GoRouter + Drift)  ← v1 deliverable
+    functions/   Firebase Cloud Functions (Node 22 + TypeScript)
+    admin/       Next.js admin ops console (optional — see docs/ADMIN_SETUP.md)
+  docs/          REVENUECAT_SETUP.md, codecanyon/
+  firebase.json  firestore.rules  firestore.indexes.json  storage.rules
+  pnpm-workspace.yaml</code></pre>
+
+  <table>
+    <thead><tr><th>Layer</th><th>Tech</th></tr></thead>
+    <tbody>
+      <tr><td>App framework</td><td>Flutter 3.x / Dart 3.11</td></tr>
+      <tr><td>State</td><td>Riverpod 3 (hand-written providers — no codegen)</td></tr>
+      <tr><td>Routing</td><td>GoRouter</td></tr>
+      <tr><td>Local DB</td><td>Drift (SQLite) + SQLCipher</td></tr>
+      <tr><td>Models / codegen</td><td>freezed, json_serializable, build_runner</td></tr>
+      <tr><td>Charts / fonts</td><td>fl_chart, google_fonts (Sora)</td></tr>
+      <tr><td>Backend</td><td>Firebase Auth / Firestore / Storage / Functions / Remote Config</td></tr>
+      <tr><td>Functions</td><td>Node 22 + TypeScript</td></tr>
+      <tr><td>AI</td><td>OpenAI + Gemini (dual, runtime-switchable)</td></tr>
+      <tr><td>Monetization</td><td>RevenueCat, Google Mobile Ads</td></tr>
+      <tr><td>Admin panel (optional)</td><td>Next.js 16 + React 19, Tailwind CSS v4, Firebase Admin SDK (deploys on Vercel)</td></tr>
+    </tbody>
+  </table>
+  <p>Feature-first folders (<code>lib/features/&lt;area&gt;/{presentation,providers}</code>).
+  The Drift schema is mirrored to Firestore across <strong>9 synced tables</strong>.
+  JS/TS uses <strong>pnpm</strong> workspaces (<code>pnpm -F functions …</code>); the
+  Flutter app is driven directly by the <strong>Flutter/Dart CLI</strong> from
+  <code>apps/mobile</code>.</p>
+</section>
+
+<section id="quick">
+  <h2>5 · Quick setup</h2>
+  <p>This page is the full reference — sections §6–§16 walk through Firebase,
+  secrets, Remote Config, monetization, and release in order. Monetization
+  specifics also live in
+  <a href="../REVENUECAT_SETUP.md"><code>docs/REVENUECAT_SETUP.md</code></a>.</p>
+  <div class="note"><strong>Heads up:</strong> Moneymind ships <em>without</em> the
+  seller's Firebase config. You must run <code>flutterfire configure</code> against
+  your own Firebase project before the app will build (see §6).</div>
+</section>
+
+<section id="firebase">
+  <h2>6 · Firebase project setup</h2>
+  <p>This is the buyer's biggest task. The repo ships only
+  <code>*.example</code> templates for the Firebase config — the real files are
+  gitignored, so you wire your own project.</p>
+  <ol>
+    <li>Create a Firebase project. Enable <strong>Authentication</strong>
+      (Email/Password + Google/Apple — see §7), <strong>Firestore</strong>,
+      <strong>Storage</strong>, <strong>Remote Config</strong>, and
+      <strong>Functions</strong> (requires the <strong>Blaze</strong> plan).</li>
+    <li>Register an Android app (<code>com.devsnack.moneymind</code> or your own id)
+      and an iOS app, then from <code>apps/mobile</code> run:
+      <pre><code class="bash">dart pub global activate flutterfire_cli
+flutterfire configure</code></pre>
+      This generates <code>lib/firebase_options.dart</code> and drops
+      <code>android/app/google-services.json</code> +
+      <code>ios/Runner/GoogleService-Info.plist</code> for your project.</li>
+    <li>Deploy rules + indexes + storage rules:
+      <pre><code class="bash">firebase deploy --only firestore:rules,firestore:indexes,storage</code></pre></li>
+    <li>Set the Function secrets (§8) and deploy Functions.</li>
+  </ol>
+  <div class="warn"><strong>Firebase config is not a secret, but don't ship the
+  seller's.</strong> Firebase client config (the <code>AIza…</code> key, app id,
+  project id) is safe to embed in client apps — protection comes from your
+  Firestore/Storage rules + App Check, not from hiding the key. But each buyer
+  must use <strong>their own</strong> project, so these files are gitignored and
+  only <code>*.example</code> templates ship.</div>
+</section>
+
+<section id="social">
+  <h2>7 · Social sign-in setup (Google + Apple)</h2>
+  <p>The Dart side is already built:
+  <code>AuthService.signInWithGoogle</code> / <code>signInWithApple</code>
+  (<code>apps/mobile/lib/data/remote/auth_service.dart</code>), shown by
+  <code>SocialSignInButtons</code> on the sign-in and sign-up screens. The
+  <strong>Apple button is iOS-only</strong>
+  (<code>!kIsWeb &amp;&amp; Platform.isIOS</code>); Google appears on both
+  platforms. You wire your own providers:</p>
+  <ul>
+    <li><strong>Firebase console → Authentication → Sign-in method:</strong> enable
+      <strong>Google</strong> and (for iOS) <strong>Apple</strong>, alongside
+      Email/Password.</li>
+    <li><strong>Google · Android:</strong> add your app's <strong>SHA-1 + SHA-256</strong>
+      fingerprints (Firebase → Project Settings → Your apps), then re-run
+      <code>flutterfire configure</code> (or re-download
+      <code>google-services.json</code>). Debug and release keystores have
+      different SHA-1s — register both
+      (<code>cd android &amp;&amp; ./gradlew signingReport</code>).</li>
+    <li><strong>Google · iOS:</strong> add the <code>REVERSED_CLIENT_ID</code> from
+      <code>GoogleService-Info.plist</code> as a URL scheme (Xcode → Runner → Info
+      → URL Types, or <code>CFBundleURLTypes</code> in <code>Info.plist</code>).
+      <code>google_sign_in</code> 7.x needs it for the auth callback.</li>
+    <li><strong>Apple · iOS:</strong> add the <strong>Sign in with Apple</strong>
+      capability to the Runner target in Xcode, enable it for the App ID in the
+      Apple Developer portal, then enable the <strong>Apple</strong> provider in
+      Firebase Auth. (A Services ID + key are only needed for the Android/web
+      relay, which this app doesn't use.)</li>
+  </ul>
+  <div class="note"><strong>Removing a provider:</strong> edit
+  <code>lib/features/auth/widgets/social_sign_in_buttons.dart</code>. Apple is
+  intentionally hidden on Android — Sign in with Apple there needs a web-redirect
+  relay (out of scope for v1).</div>
+</section>
+
+<section id="functions">
+  <h2>8 · Cloud Functions &amp; secrets</h2>
+  <p>Set the five secrets, then deploy. Functions are pinned to
+  <code>asia-southeast1</code>; first deploys take a few minutes.</p>
+  <pre><code class="bash">firebase functions:secrets:set OPENAI_API_KEY
+firebase functions:secrets:set GEMINI_API_KEY
+firebase functions:secrets:set EXCHANGERATE_API_KEY     # free key: exchangerate-api.com
+firebase functions:secrets:set REVENUECAT_WEBHOOK_SECRET # self-generated
+firebase functions:secrets:set REVENUECAT_API_KEY        # RevenueCat REST key
+
+firebase deploy --only functions</code></pre>
+  <table>
+    <thead><tr><th>Function</th><th>Type</th><th>What it does</th></tr></thead>
+    <tbody>
+      <tr><td><code>onUserCreate</code></td><td>Auth trigger</td><td>Seeds the <code>users/{uid}</code> doc on sign-up</td></tr>
+      <tr><td><code>getFxRate</code></td><td>Callable</td><td>Live FX rate (12h cache, manual fallback)</td></tr>
+      <tr><td><code>suggestCategory</code></td><td>AI callable</td><td>Smart category suggestion</td></tr>
+      <tr><td><code>scanReceipt</code></td><td>AI callable</td><td>Receipt OCR/extraction (GPT-4o Vision)</td></tr>
+      <tr><td><code>aiCoachChat</code></td><td>AI callable</td><td>Finance coach chat (RAG)</td></tr>
+      <tr><td><code>forecastSpending</code></td><td>AI callable</td><td>End-of-month spend forecast</td></tr>
+      <tr><td><code>detectAnomalies</code></td><td>AI callable</td><td>Unusual-spend detection</td></tr>
+      <tr><td><code>computeHealthScore</code></td><td>AI callable</td><td>Financial health score + factors + tips</td></tr>
+      <tr><td><code>generateWeeklyRecap</code></td><td>AI callable</td><td>Weekly spending recap</td></tr>
+      <tr><td><code>generateBudgetPlan</code></td><td>AI callable</td><td>Proposes a monthly budget per category</td></tr>
+      <tr><td><code>generateSavingsPlan</code></td><td>AI callable</td><td>Savings plan toward a goal</td></tr>
+      <tr><td><code>detectSubscriptions</code></td><td>Callable (no LLM)</td><td>90-day recurring-charge pattern match</td></tr>
+      <tr><td><code>confirmSubscription</code></td><td>Callable (no LLM)</td><td>Writes a <code>recurringRules</code> doc</td></tr>
+      <tr><td><code>handleRevenueCatWebhook</code></td><td>HTTPS</td><td>Authoritative premium-entitlement writer</td></tr>
+      <tr><td><code>refreshEntitlement</code></td><td>Callable</td><td>Forces a RevenueCat entitlement re-sync</td></tr>
+      <tr><td><code>processRecurringRules</code></td><td>Scheduler (daily)</td><td>Posts due recurring transactions</td></tr>
+      <tr><td><code>resetMonthlyAIQuotas</code></td><td>Scheduler (monthly)</td><td>Rolls AI usage into <code>adminStatsMonthly</code>, then garbage-collects old <code>aiUsage</code> docs</td></tr>
+      <tr><td><code>aggregatePlatformStats</code></td><td>Scheduler (daily)</td><td>Writes the <code>adminStatsDaily</code> snapshot the admin panel reads</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section id="rc">
+  <h2>9 · Remote Config keys</h2>
+  <p>Publish these in the Firebase console. The client registers in-app defaults
+  in <code>remote_config_init.dart</code>, but the console values win.</p>
+  <table>
+    <thead><tr><th>Key</th><th>Type</th><th>Default</th><th>Controls</th></tr></thead>
+    <tbody>
+      <tr><td><code>ai_provider</code></td><td>string</td><td><code>gemini</code></td><td>Global AI provider (<code>openai</code>|<code>gemini</code>)</td></tr>
+      <tr><td><code>free_tier_wallets_max</code></td><td>int</td><td><code>1</code></td><td>Max wallets for free users</td></tr>
+      <tr><td><code>free_tier_transactions_monthly</code></td><td>int</td><td><code>100</code></td><td>Monthly transaction cap (free)</td></tr>
+      <tr><td><code>free_tier_ai_quota</code></td><td>int</td><td><code>5</code></td><td>Monthly AI-action cap (free)</td></tr>
+      <tr><td><code>premium_monthly_price</code></td><td>string</td><td><code>$4.99</code></td><td>Display price (paywall)</td></tr>
+      <tr><td><code>premium_yearly_price</code></td><td>string</td><td><code>$29.99</code></td><td>Display price</td></tr>
+      <tr><td><code>premium_lifetime_price</code></td><td>string</td><td><code>$79.99</code></td><td>Display price</td></tr>
+      <tr><td><code>revenuecat_api_key_ios</code></td><td>string</td><td><code>(empty)</code></td><td>RevenueCat public SDK key (Apple)</td></tr>
+      <tr><td><code>revenuecat_api_key_android</code></td><td>string</td><td><code>(empty)</code></td><td>RevenueCat public SDK key (Google)</td></tr>
+      <tr><td><code>ads_enabled</code></td><td>bool</td><td><code>false</code></td><td>Global ads kill switch</td></tr>
+      <tr><td><code>admob_banner_id_ios</code> / <code>_android</code></td><td>string</td><td><code>(empty)</code></td><td>Banner ad unit ids</td></tr>
+      <tr><td><code>admob_interstitial_id_ios</code> / <code>_android</code></td><td>string</td><td><code>(empty)</code></td><td>Interstitial ad unit ids</td></tr>
+      <tr><td><code>interstitial_frequency</code></td><td>int</td><td><code>5</code></td><td>Show an interstitial every N transaction adds</td></tr>
+    </tbody>
+  </table>
+  <div class="warn"><strong>Unset keys have visible effects:</strong> empty
+  <code>revenuecat_api_key_*</code> → the paywall shows "not configured"; empty
+  AdMob ids → ads stay hidden. Publish the RevenueCat keys before testing
+  purchases.</div>
+</section>
+
+<section id="ai">
+  <h2>10 · AI provider setup</h2>
+  <p>Moneymind supports OpenAI and Gemini behind one interface. Set whichever
+  key(s) you have:</p>
+  <pre><code class="bash">firebase functions:secrets:set OPENAI_API_KEY
+firebase functions:secrets:set GEMINI_API_KEY</code></pre>
+  <ul>
+    <li><strong>Per-feature default:</strong> vision (receipt scan) uses
+      <code>gpt-4o</code>; every other AI feature defaults to
+      <code>gemini-2.5-flash-lite</code> (cheap/fast) with <code>gpt-4o-mini</code>
+      as the OpenAI fallback.</li>
+    <li><strong>Global override:</strong> Remote Config <code>ai_provider</code>
+      = <code>"openai"</code> or <code>"gemini"</code>.</li>
+    <li><strong>Quota:</strong> monthly counters at
+      <code>users/{uid}/aiUsage/{yyyy-MM}</code>, one shared ceiling from
+      <code>free_tier_ai_quota</code> (default 5). Premium users bypass the cap
+      entirely.</li>
+  </ul>
+  <div class="note"><strong>Security guarantee:</strong> no AI keys live in the
+  Flutter app — every model call goes through a Cloud Function. The keys exist
+  only in Functions secrets.</div>
+</section>
+
+<section id="monet">
+  <h2>11 · Monetization setup (RevenueCat + AdMob)</h2>
+  <p>Full RevenueCat walkthrough:
+  <a href="../REVENUECAT_SETUP.md"><code>docs/REVENUECAT_SETUP.md</code></a>.
+  In short, RevenueCat needs three credentials:</p>
+  <ul>
+    <li>Per-platform <strong>public SDK keys</strong> → Remote Config
+      <code>revenuecat_api_key_ios</code> / <code>_android</code>.</li>
+    <li><strong>Secret REST key</strong> → Functions secret
+      <code>REVENUECAT_API_KEY</code>.</li>
+    <li><strong>Self-generated webhook secret</strong> →
+      <code>REVENUECAT_WEBHOOK_SECRET</code>, with the webhook URL
+      <code>https://asia-southeast1-&lt;project&gt;.cloudfunctions.net/handleRevenueCatWebhook</code>.</li>
+  </ul>
+  <p>The entitlement identifier must be exactly <code>premium</code>, and your
+  products must be attached to it. Use RevenueCat's <strong>Test Store</strong>
+  to validate purchases without store setup.</p>
+  <p><strong>AdMob:</strong> create an AdMob app, put your banner/interstitial unit
+  ids into Remote Config (Google's test ids are fine for dev), and
+  <code>ads_enabled</code> is the global kill switch. Both surfaces hide for
+  premium users.</p>
+</section>
+
+<section id="admin">
+  <h2>12 · Admin panel (optional)</h2>
+  <p><code>apps/admin</code> is a <strong>Next.js 16</strong> operations console for
+  your deployment. It is entirely optional — the mobile app works without it —
+  but it is where you see how many users signed up, what your AI features are
+  costing, whether RevenueCat is reaching you, and why a given user is hitting a
+  limit. It also gives you a validated editor for the Remote Config keys in §9,
+  which beats hand-editing strings in the Firebase console.</p>
+
+  <table>
+    <thead><tr><th>Module</th><th>What it shows</th></tr></thead>
+    <tbody>
+      <tr><td>Dashboard</td><td>Users, growth, premium conversion, AI calls and estimated spend</td></tr>
+      <tr><td>Users</td><td>Search, premium filter, per-user detail: entitlement, AI usage, free-tier standing</td></tr>
+      <tr><td>AI usage &amp; cost</td><td>Per-feature call counts, top consumers, quota rejections, estimated cost</td></tr>
+      <tr><td>Remote Config</td><td>Typed editor with validation, drift detection, diff preview, ETag-guarded publish</td></tr>
+      <tr><td>Billing</td><td>RevenueCat webhook events, subscriptions expiring soon, entitlement refresh</td></tr>
+      <tr><td>System health</td><td>Scheduler heartbeats, FX cache freshness, configuration checklist</td></tr>
+      <tr><td>Audit log</td><td>Every change made from the panel — who, what, before → after</td></tr>
+      <tr><td>Access control</td><td>Who can sign in; grant and revoke admin access</td></tr>
+    </tbody>
+  </table>
+
+  <div class="note">
+    <strong>Your security rules do not change.</strong> The panel reads
+    everything server-side through the Firebase Admin SDK, so
+    <code>firestore.rules</code> stays strictly owner-scoped exactly as it ships.
+    Running the panel does not widen what a mobile client can reach, and the
+    browser never gets a Firestore handle.
+  </div>
+
+  <h3>How access works</h3>
+  <p>Access is a Firebase Auth <strong>custom claim</strong> (<code>admin: true</code>) —
+  not a password and not an email list. An ordinary Moneymind user has a valid
+  Firebase account and still cannot get in. Email/password is the only sign-in
+  method, and there is deliberately no sign-up screen, so the first admin is
+  created from a terminal.</p>
+
+  <h3>Setup</h3>
+  <p>Requires the <strong>Blaze</strong> plan (already needed for Cloud Functions)
+  and <strong>firebase-tools 14.4+</strong>.</p>
+  <ol>
+    <li>Register a <strong>Web app</strong> in Firebase console → Project settings
+      → Your apps, then copy its config into <code>apps/admin/.env.local</code>
+      (start from <code>.env.example</code>).</li>
+    <li>Enable <strong>Email/Password</strong> under Authentication → Sign-in
+      method. It is the panel's only sign-in method.</li>
+    <li>Create your admin account and grant the claim:</li>
+  </ol>
+<pre><code>pnpm install
+gcloud auth application-default login
+pnpm -F admin grant-admin you@example.com --create</code></pre>
+  <p>That creates the Firebase Auth user, sets the claim, and prints a generated
+  password <strong>once</strong>. Pass <code>--password='…'</code> to choose your
+  own. Then run it locally:</p>
+<pre><code>pnpm -F admin dev     # http://localhost:3000</code></pre>
+
+  <div class="warn">
+    <strong>Custom claims only apply to new tokens.</strong> After granting or
+    revoking access, the account must sign out and back in. A revoke is
+    immediate, because it also revokes refresh tokens.
+  </div>
+
+  <h3>Deploy</h3>
+  <p>The panel is a standard Next.js app. <strong>Vercel</strong> is the
+  documented target — it resolves pnpm workspaces natively. Import your repo,
+  then set, under <em>Settings → Build &amp; Deployment</em>:</p>
+  <table>
+    <thead><tr><th>Setting</th><th>Value</th></tr></thead>
+    <tbody>
+      <tr><td>Root Directory</td><td><code>apps/admin</code></td></tr>
+      <tr><td>Include files outside the root directory</td><td><strong>ON</strong> — the workspace and its single lockfile are one level up</td></tr>
+      <tr><td>Framework Preset</td><td>Next.js (auto-detected)</td></tr>
+    </tbody>
+  </table>
+  <p>Set the four <code>NEXT_PUBLIC_FIREBASE_*</code> values plus
+  <code>FIREBASE_SERVICE_ACCOUNT_JSON</code> under <em>Settings → Environment
+  Variables</em>. Nothing configuration-related is committed, which is why none
+  of it lives in a file. Pick the function region nearest your Firestore data —
+  <code>asia-southeast1</code> pairs with Vercel's Singapore region.</p>
+
+  <div class="warn">
+    <strong>Vercel needs a service-account key.</strong> The Firebase Admin SDK
+    normally authenticates through Application Default Credentials, which only a
+    Google runtime provides. On Vercel you must set
+    <code>FIREBASE_SERVICE_ACCOUNT_JSON</code> to the whole key JSON (Firebase
+    console → Project settings → Service accounts → Generate new private key)
+    and mark it <em>Sensitive</em>. That key has full administrative access and
+    bypasses your security rules — never commit it, never put it in a
+    <code>NEXT_PUBLIC_*</code> variable, and rotate it if it is ever exposed.
+  </div>
+
+  <p>Deploy the rules and indexes too, if you have not since adding the panel:</p>
+<pre><code>firebase deploy --only firestore:rules,firestore:indexes</code></pre>
+
+  <div class="note">
+    <strong>Firebase App Hosting does not work for this app.</strong> Its
+    buildpack requires a dependency lock file inside the backend's root
+    directory, and pnpm keeps exactly one <code>pnpm-lock.yaml</code> at the
+    workspace root — so it fails with <code>fah/missing-lock-file</code>
+    (firebase-tools#7478). Use Vercel, or the container path below.
+  </div>
+
+  <p><strong>Any container host</strong> also works: <code>output:
+  'standalone'</code> is enabled everywhere except Vercel, so
+  <code>gcloud run deploy moneymind-admin --source .</code> from the repo root
+  builds and runs it, as does <code>apps/admin/Dockerfile</code>. On a Google
+  runtime the runtime service account supplies credentials — grant it
+  <code>roles/datastore.user</code>, <code>roles/firebaseauth.admin</code>, and
+  <code>roles/firebaseremoteconfig.admin</code>, and
+  <strong>never bake a service-account key into an image</strong>.</p>
+
+  <h3>Demo mode</h3>
+  <p>Set <code>NEXT_PUBLIC_DEMO_MODE=true</code> to make the panel read-only:
+  every page still renders, but Remote Config publishing, admin grant/revoke, and
+  entitlement refresh are all refused. It is enforced server-side in each
+  endpoint, not merely hidden in the UI. Useful for screenshots or showing the
+  console to someone without handing them a live deployment. It is inlined at
+  build time, so changing it needs a redeploy.</p>
+
+  <div class="note">
+    <strong>Full walkthrough:</strong> <code>docs/ADMIN_SETUP.md</code> covers IAM,
+    troubleshooting, and the alternative hosting path in detail.
+    <code>apps/admin/README.md</code> is the developer quick reference.
+  </div>
+</section>
+
+<section id="brand">
+  <h2>13 · Branding &amp; customization</h2>
+  <h3>App name + bundle id</h3>
+  <p>Edit <code>apps/mobile/pubspec.yaml</code>,
+  <code>android/app/build.gradle.kts</code> (<code>applicationId</code>),
+  <code>android/app/src/main/AndroidManifest.xml</code>
+  (<code>android:label</code>), and
+  <code>ios/Runner/Info.plist</code> (<code>CFBundleDisplayName</code>) + the
+  Xcode bundle id. Default id: <code>com.devsnack.moneymind</code>.</p>
+  <h3>Theme</h3>
+  <p>All colors, type, shape, and spacing live in
+  <code>apps/mobile/lib/core/theme/</code>. Edit <code>colors.dart</code> once
+  and the whole app reskins — <strong>there are no hex literals in widgets</strong>
+  (a hard guardrail). Font is <strong>Sora</strong> via <code>google_fonts</code>;
+  swap the family in <code>typography.dart</code>.</p>
+  <h3>Strings / i18n</h3>
+  <p>User-facing strings are ARB-driven (<code>lib/l10n/app_en.arb</code>). English
+  ships in v1; the structure is i18n-ready.</p>
+</section>
+
+<section id="build">
+  <h2>14 · Build &amp; release</h2>
+  <pre><code class="bash"># from apps/mobile
+flutter build appbundle --release   # Android → Play Console
+flutter build ipa --release         # iOS → App Store Connect
+
+# after any Drift/model change, regenerate code first:
+dart run build_runner build --delete-conflicting-outputs
+
+# backend
+firebase deploy --only functions</code></pre>
+  <div class="warn"><strong>Replace the AdMob test ids</strong>
+  (<code>ca-app-pub-3940256099942544~…</code>) in
+  <code>ios/Runner/Info.plist</code> and the Android manifest with your own
+  before a production release.</div>
+</section>
+
+<section id="signing">
+  <h2>15 · App signing</h2>
+  <p>Release builds must be signed with <strong>your own</strong> keys. The
+  Android build is already wired to read your keystore from
+  <code>android/key.properties</code> (gitignored) — you just need to supply
+  the file and the <code>.jks</code>. Release builds also have R8
+  minification + resource shrinking on by default; keep rules live in
+  <code>android/app/proguard-rules.pro</code>.</p>
+
+  <h3>Android — keystore</h3>
+  <ol>
+    <li>Generate an upload keystore (keep this file private — never commit it):
+      <pre><code class="bash">keytool -genkey -v -keystore ~/upload-keystore.jks \
+  -keyalg RSA -keysize 2048 -validity 10000 -alias upload</code></pre></li>
+    <li>Copy the shipped template and fill it in:
+      <pre><code class="bash">cp android/key.properties.example android/key.properties</code></pre>
+      Then edit <code>android/key.properties</code>:
+      <pre><code>storePassword=********
+keyPassword=********
+keyAlias=upload
+storeFile=/absolute/path/to/upload-keystore.jks</code></pre>
+      Both <code>key.properties</code> and any <code>.jks</code>/<code>.keystore</code>
+      under <code>android/</code> are already in <code>.gitignore</code>.</li>
+    <li>That's it for wiring — <code>android/app/build.gradle.kts</code> already
+      loads <code>key.properties</code>, defines a <code>release</code>
+      <code>signingConfig</code>, enables <code>isMinifyEnabled</code> +
+      <code>isShrinkResources</code>, and points
+      <code>buildTypes.release</code> at both. No edits required.</li>
+    <li>Build the release bundle and upload it to Play Console:
+      <pre><code class="bash">flutter build appbundle --release</code></pre>
+      <strong>Play App Signing</strong> is recommended — you keep the upload key
+      and Google manages the app-signing key.</li>
+  </ol>
+  <div class="note"><strong>R8 stripped a class my code reflects on?</strong>
+  Add a <code>-keep</code> rule to
+  <code>android/app/proguard-rules.pro</code> and rebuild. Common offenders
+  (Firebase, Drift/SQLCipher, RevenueCat, flutter_local_notifications,
+  Play Core) are already covered.</div>
+  <div class="note"><strong>Firebase + Google sign-in:</strong> register the
+  keystore's <strong>SHA-1 and SHA-256</strong> fingerprints in Firebase (your
+  debug cert, your upload cert, and — if you enable Play App Signing — the
+  Play-managed app-signing cert). List them with
+  <code>cd android &amp;&amp; ./gradlew signingReport</code>, or copy them from
+  the Play Console "App signing" page. Without the right SHA, Google sign-in
+  fails on release builds (§7).</div>
+
+  <h3>iOS — code signing</h3>
+  <ol>
+    <li>Join the <strong>Apple Developer Program</strong> and create the app
+      record in <strong>App Store Connect</strong> with your bundle id
+      (<code>com.devsnack.moneymind</code> or your own).</li>
+    <li>In Xcode → <code>Runner</code> → <strong>Signing &amp; Capabilities</strong>:
+      select your <strong>Team</strong>, set the bundle id, and leave
+      <strong>Automatically manage signing</strong> enabled (Xcode creates the
+      certificate + provisioning profile). Add the <strong>Sign in with
+      Apple</strong> capability here (§7).</li>
+    <li>Build, then upload via <strong>Xcode Organizer</strong> or
+      <strong>Transporter</strong>:
+      <pre><code class="bash">flutter build ipa --release</code></pre></li>
+  </ol>
+  <div class="warn"><strong>Never commit signing material.</strong> Keep
+  <code>key.properties</code>, <code>*.jks</code> / <code>*.keystore</code>, and
+  <code>.p12</code> / provisioning profiles out of git — add them to
+  <code>.gitignore</code> if they aren't already. Losing or leaking the keystore
+  means you can't ship updates under the same app.</div>
+</section>
+
+<section id="prod">
+  <h2>16 · Production checklist</h2>
+  <ol>
+    <li>Branding: app name + bundle id across the four native files; launcher icon.</li>
+    <li>Theme: edit <code>lib/core/theme/colors.dart</code> — light + dark.</li>
+    <li>Firebase: create project, <code>flutterfire configure</code>, enable Auth /
+      Firestore / Storage / Remote Config / Functions (Blaze). Enable Google +
+      Apple sign-in; add Android SHA-1/256, the iOS
+      <code>REVERSED_CLIENT_ID</code> URL scheme, and the Xcode "Sign in with
+      Apple" capability (§7).</li>
+    <li><code>firebase deploy --only firestore:rules,firestore:indexes,storage</code></li>
+    <li>Set the 5 Function secrets, then <code>firebase deploy --only functions</code>.</li>
+    <li>Publish Remote Config keys (RevenueCat keys, AdMob ids, free-tier
+      ceilings, prices).</li>
+    <li>RevenueCat: products + <code>premium</code> entitlement + webhook
+      URL/secret (per <code>REVENUECAT_SETUP.md</code>).</li>
+    <li>AdMob: real ad unit ids into Remote Config; replace
+      <code>GADApplicationIdentifier</code> in <code>Info.plist</code> + the
+      Android manifest meta-data.</li>
+    <li>iOS capabilities: Face ID usage string (present); Sign in with Apple
+      (§7). Push not required — notifications are local-only in v1.</li>
+    <li>Build releases + upload to Play Console / App Store Connect.</li>
+  </ol>
+  <div class="note"><strong>Packaging tip:</strong> build the distributable zip
+  from tracked files only so your real Firebase config (which stays on your disk)
+  never leaks: <code>git archive --format=zip -o moneymind-1.0.0.zip HEAD</code>.</div>
+</section>
+
+<section id="changelog">
+  <h2>17 · Changelog</h2>
+  <ul>
+    <li><strong>1.0.0</strong> — Initial release. Full personal-finance feature set
+      (wallets, transactions, multi-currency, budgets, recurring, debts, goals,
+      reports), functional AI suite (receipt scan, coach, forecast, anomalies,
+      health score, budget/savings generators, subscription detector),
+      RevenueCat + AdMob monetization, app lock, local notifications, Google +
+      Apple sign-in.</li>
+  </ul>
+</section>
+
+<section id="support">
+  <h2>18 · Support</h2>
+  <p><strong>Email</strong>
+  <a href="mailto:devsnack26@gmail.com">devsnack26@gmail.com</a> ·
+  <strong>WhatsApp</strong>
+  <a href="https://wa.me/855967413911">+855&nbsp;96&nbsp;741&nbsp;3911</a>.
+  Six months of support are bundled per the CodeCanyon standard, covering setup
+  help and bug fixes.</p>
+  <p>Your Firebase project, OpenAI/Gemini keys, RevenueCat account, AdMob account,
+  and store developer accounts are your responsibility — we provide the setup
+  walkthroughs, not the accounts or hosting.</p>
+  <p><span class="pill">Flutter</span><span class="pill">Firebase</span>
+  <span class="pill">OpenAI + Gemini</span><span class="pill">RevenueCat</span>
+  <span class="pill">AdMob</span><span class="pill">Riverpod 3</span></p>
+</section>
+</div>
+
+<footer>
+  Moneymind v1.0.0 · © <span id="y"></span> · devsnack26@gmail.com · WhatsApp +855 96 741 3911
+  <script>document.getElementById('y').textContent=new Date().getFullYear();</script>
+</footer>
+</body>
+</html>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Moneymind launcher icon — placeholder per DESIGN.md tokens.
+  Warm Clay (#8a4f37) rounded square + 3 ascending Sand (#fff8f5) bars.
+  Source of truth: render via `rsvg-convert -w 1024 -h 1024 logo.svg -o logo.png`.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <rect x="0" y="0" width="1024" height="1024" rx="180" ry="180" fill="#8a4f37"/>
+  <g fill="#fff8f5">
+    <rect x="313" y="538" width="92" height="358" rx="46" ry="46"/>
+    <rect x="466" y="333" width="92" height="563" rx="46" ry="46"/>
+    <rect x="619" y="128" width="92" height="768" rx="46" ry="46"/>
+  </g>
+</svg>
