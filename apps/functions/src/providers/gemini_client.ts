@@ -11,8 +11,7 @@ import { AIProvider } from './provider';
  * and inline them as base64 — works for any public Firebase Storage URL
  * without needing the `fileData` URI scheme.
  *
- * Model is a per-feature default (e.g. `gemini-1.5-flash` for chat,
- * `gemini-1.5-pro` for vision). API key is read from
+ * Model is a per-feature default (see `models.ts`). API key is read from
  * `process.env.GEMINI_API_KEY` (bound via `defineSecret`).
  */
 export class GeminiClient implements AIProvider {

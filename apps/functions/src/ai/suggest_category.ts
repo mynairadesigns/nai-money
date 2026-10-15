@@ -9,6 +9,7 @@ import {
   type SuggestCategoryInput,
 } from '../prompts/suggest_category';
 import { REGION } from '../utils/region';
+import { GEMINI_FAST } from '../providers/models';
 
 const OPENAI_API_KEY = defineSecret('OPENAI_API_KEY');
 const GEMINI_API_KEY = defineSecret('GEMINI_API_KEY');
@@ -48,7 +49,7 @@ export const suggestCategory = onCall(
 
     const providerName = await selectProvider({ featureDefault: 'gemini' });
     const model =
-      providerName === 'openai' ? 'gpt-4o-mini' : 'gemini-2.5-flash-lite';
+      providerName === 'openai' ? 'gpt-4o-mini' : GEMINI_FAST;
     const provider = getProvider(providerName, model);
 
     const { system, user } = buildSuggestCategoryPrompt(input);

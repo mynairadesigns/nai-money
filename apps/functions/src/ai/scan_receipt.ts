@@ -9,6 +9,7 @@ import {
   type ScanReceiptInput,
 } from '../prompts/scan_receipt';
 import { REGION } from '../utils/region';
+import { GEMINI_VISION } from '../providers/models';
 
 const OPENAI_API_KEY = defineSecret('OPENAI_API_KEY');
 const GEMINI_API_KEY = defineSecret('GEMINI_API_KEY');
@@ -55,7 +56,7 @@ export const scanReceipt = onCall(
     const { input, imageUrl } = _validateInput(request.data);
 
     const providerName = await selectProvider({ featureDefault: 'gemini' });
-    const model = providerName === 'openai' ? 'gpt-4o' : 'gemini-2.5-flash';
+    const model = providerName === 'openai' ? 'gpt-4o' : GEMINI_VISION;
     const provider = getProvider(providerName, model);
 
     const { system, user } = buildScanReceiptPrompt(input);

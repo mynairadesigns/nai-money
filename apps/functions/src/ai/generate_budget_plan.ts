@@ -11,6 +11,7 @@ import { getProvider, selectProvider } from '../providers/select_provider';
 import { checkAndIncrementQuota } from '../quota/check_quota';
 import { enforceRateLimit } from '../quota/rate_limit';
 import { REGION } from '../utils/region';
+import { GEMINI_FAST } from '../providers/models';
 
 if (!admin.apps.length) admin.initializeApp();
 
@@ -80,7 +81,7 @@ export const generateBudgetPlan = onCall(
 
     const providerName = await selectProvider({ featureDefault: 'gemini' });
     const model =
-      providerName === 'openai' ? 'gpt-4o-mini' : 'gemini-2.5-flash-lite';
+      providerName === 'openai' ? 'gpt-4o-mini' : GEMINI_FAST;
     const provider = getProvider(providerName, model);
 
     const { system, user } = buildBudgetPlanPrompt(context);
