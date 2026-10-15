@@ -59,9 +59,9 @@ jobs:
         working-directory: apps/functions
         run: |
           {
-            echo "PAYSTACK_PLAN_MONTHLY=${{ vars.PAYSTACK_PLAN_MONTHLY }}"
-            echo "PAYSTACK_PLAN_YEARLY=${{ vars.PAYSTACK_PLAN_YEARLY }}"
-            echo "PAYSTACK_LIFETIME_AMOUNT=${{ vars.PAYSTACK_LIFETIME_AMOUNT || '0' }}"
+            echo "PAYSTACK_PLAN_MONTHLY=${{ vars.PAYSTACK_PLAN_MONTHLY || 'PLN_9ifa5bkzfurvipu' }}"
+            echo "PAYSTACK_PLAN_YEARLY=${{ vars.PAYSTACK_PLAN_YEARLY || 'PLN_1h7atrzvcvi9r0x' }}"
+            echo "PAYSTACK_LIFETIME_AMOUNT=${{ vars.PAYSTACK_LIFETIME_AMOUNT || '9900000' }}"
             echo "PAYSTACK_CURRENCY=${{ vars.PAYSTACK_CURRENCY || 'NGN' }}"
             echo "GEMINI_MODEL_FAST=${{ vars.GEMINI_MODEL_FAST || 'gemini-3.5-flash-lite' }}"
             echo "GEMINI_MODEL_VISION=${{ vars.GEMINI_MODEL_VISION || 'gemini-3.5-flash' }}"
