@@ -80,5 +80,14 @@ jobs:
           --only hosting,functions,firestore,storage
           --non-interactive --force
 
+      # Lets the browser read receipt images back from Storage.
+      - uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+      - uses: google-github-actions/setup-gcloud@v2
+      - name: Apply Storage CORS
+        continue-on-error: true
+        run: gcloud storage buckets update "gs://$FIREBASE_PROJECT_ID.firebasestorage.app" --cors-file=storage.cors.json
+
       - name: Live URL
         run: echo "🚀 https://$FIREBASE_PROJECT_ID.web.app" >> "$GITHUB_STEP_SUMMARY"
