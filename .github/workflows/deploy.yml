@@ -82,9 +82,14 @@ jobs:
       - name: Deploy to Firebase
         run: |
           set -o pipefail
-          if ! firebase deploy --project "$FIREBASE_PROJECT_ID" \
+          deploy() {
+            firebase deploy --project "$FIREBASE_PROJECT_ID" \
               --only hosting,functions,firestore,storage \
-              --non-interactive --force 2>&1 | tee "$RUNNER_TEMP/deploy.log"; then
+              --non-interactive --force 2>&1 | tee "$RUNNER_TEMP/deploy.log"
+          }
+          # New projects often throttle the first batch of function builds
+          # ("Build failed ... unexpected error"); a retry deploys the rest.
+          if ! deploy && { echo "Retrying in 90s…"; sleep 90; ! deploy; } && { echo "Retrying in 180s…"; sleep 180; ! deploy; }; then
             # Surface the real error as annotations (visible in the run summary).
             grep -iE "error|denied|permission|not enabled|failed" "$RUNNER_TEMP/deploy.log" \
               | grep -v "^\s*$" | tail -15 | while IFS= read -r line; do
