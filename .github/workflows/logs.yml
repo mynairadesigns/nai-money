@@ -31,7 +31,15 @@ jobs:
             --project "$FIREBASE_PROJECT_ID" --freshness="${{ inputs.hours }}h" --limit=200 --order=desc \
             --format='table[no-heading](timestamp,resource.labels.service_name,resource.labels.function_name,severity,textPayload,jsonPayload.message,protoPayload.status.message)' \
             > out/logs/functions.txt || echo "gcloud failed: $?" >> out/logs/functions.txt
-          wc -l out/logs/functions.txt
+          gcloud logging read \
+            '(resource.type="cloud_run_revision" OR resource.type="cloud_function") AND severity>=ERROR' \
+            --project "$FIREBASE_PROJECT_ID" --freshness="${{ inputs.hours }}h" --limit=15 --order=desc \
+            --format=json > out/logs/errors.json || true
+          gcloud run services get-iam-policy getpaystackprices --region europe-west1 \
+            --project "$FIREBASE_PROJECT_ID" --format=json > out/logs/iam-getpaystackprices.json 2>&1 || true
+          gcloud run services get-iam-policy aicoachchat --region europe-west1 \
+            --project "$FIREBASE_PROJECT_ID" --format=json > out/logs/iam-aicoachchat.json 2>&1 || true
+          wc -l out/logs/*
       - name: Commit to diagnostics branch
         run: |
           cd out
