@@ -1,0 +1,6 @@
+key mode: TEST
+PLN_uzavsxs91t6kusd → Plan retrieved | HF Monthly monthly 290000 NGN | integration 1151672
+PLN_hxbuwmktcx6gzeb → Plan retrieved | HF Yearly annually 2900000 NGN | integration 1151672
+plans visible to this key:
+  PLN_hxbuwmktcx6gzeb HF Yearly annually 2900000
+  PLN_uzavsxs91t6kusd HF Monthly monthly 290000
