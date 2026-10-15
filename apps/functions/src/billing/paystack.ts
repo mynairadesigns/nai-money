@@ -148,10 +148,17 @@ export const getPaystackPrices = onCall(
     const codes = planCodes();
     const fetchPlan = async (code: string): Promise<PlanPrice | null> => {
       if (!code) return null;
-      const p = await paystack<{ amount: number; currency: string }>(
-        `/plan/${encodeURIComponent(code)}`,
-      );
-      return { amount: p.amount, currency: p.currency };
+      try {
+        const p = await paystack<{ amount: number; currency: string }>(
+          `/plan/${encodeURIComponent(code)}`,
+        );
+        return { amount: p.amount, currency: p.currency };
+      } catch (e) {
+        // Usually a key/plan mismatch (other business, or Test vs Live).
+        // Hide that plan rather than failing the whole paywall.
+        console.error(`getPaystackPrices: plan ${code} unavailable`, e);
+        return null;
+      }
     };
     const [monthly, yearly] = await Promise.all([
       fetchPlan(codes.monthly),

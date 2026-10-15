@@ -56,9 +56,9 @@ class AppColors {
     seedColor: brandRed,
     brightness: Brightness.dark,
   ).copyWith(
-    primary: const Color(0xFFFF8A80),
-    onPrimary: const Color(0xFF4A0000),
-    primaryContainer: const Color(0xFF93000A),
+    primary: const Color(0xFFEF3B2D),
+    onPrimary: const Color(0xFFFFFFFF),
+    primaryContainer: const Color(0xFF7A0F08),
     onPrimaryContainer: const Color(0xFFFFDAD4),
     secondary: const Color(0xFF7FDA9C),
     onSecondary: const Color(0xFF003919),

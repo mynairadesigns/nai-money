@@ -14,10 +14,14 @@ import '../../../data/remote/paystack_billing_service.dart';
 const kPaystackPendingRefKey = 'mm_paystack_pending_ref';
 
 /// Prices for the web paywall, read live from the Paystack plans.
-final paystackPricesProvider =
-    FutureProvider.autoDispose<PaystackPrices>((ref) async {
-  return ref.read(paystackBillingServiceProvider).getPrices();
-});
+final paystackPricesProvider = FutureProvider.autoDispose<PaystackPrices>(
+  (ref) async {
+    return ref.read(paystackBillingServiceProvider).getPrices();
+  },
+  // Riverpod 3 retries failed providers forever by default, which left the
+  // paywall spinning. Fail fast and show the "not available" card instead.
+  retry: (_, _) => null,
+);
 
 enum PaystackReturnStatus { idle, verifying, success, pending, failed }
 
