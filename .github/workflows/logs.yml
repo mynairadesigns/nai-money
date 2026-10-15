@@ -47,6 +47,13 @@ jobs:
             --project "$FIREBASE_PROJECT_ID" --freshness="${{ inputs.hours }}h" --limit=40 --order=desc \
             --format='value(timestamp,severity,textPayload,jsonPayload.message)' > out/logs/service.txt || true
           wc -l out/logs/*
+      - name: List Gemini models available to this key
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: |
+          curl -s "https://generativelanguage.googleapis.com/v1beta/models?pageSize=200&key=$GEMINI_API_KEY" \
+            | python3 -c "import json,sys; d=json.load(sys.stdin); print('\n'.join(m['name']+'  '+','.join(m.get('supportedGenerationMethods',[])) for m in d.get('models',[])) or json.dumps(d)[:500])" \
+            > out/logs/gemini-models.txt || true
       - name: Commit to diagnostics branch
         run: |
           cd out
