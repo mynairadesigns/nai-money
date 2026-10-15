@@ -61,7 +61,7 @@ export const generateBudgetPlan = onCall(
       windowSeconds: 60,
       maxCalls: 3,
     });
-    await checkAndIncrementQuota({ uid, field: 'budgetPlan' });
+    const quota = await checkAndIncrementQuota({ uid, field: 'budgetPlan' });
 
     const input = _validateInput(request.data);
     const context = await buildBudgetContext(uid, input);
@@ -91,6 +91,7 @@ export const generateBudgetPlan = onCall(
       raw = await provider.generateJson({ system, user });
     } catch (e) {
       console.error('generateBudgetPlan: provider error', e);
+      await quota.refund();
       throw new HttpsError('internal', 'AI provider error');
     }
 

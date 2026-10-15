@@ -33,7 +33,7 @@ export async function checkAndIncrementQuota(opts: {
   field: string;
   /** Optional override; defaults to RC `free_tier_ai_quota` (else 5). */
   limitOverride?: number;
-}): Promise<void> {
+}): Promise<{ refund: () => Promise<void> }> {
   const { uid, field } = opts;
   const limit = opts.limitOverride ?? (await getRcNumber('free_tier_ai_quota', 5));
   const yearMonth = _yearMonth(new Date());
@@ -90,6 +90,22 @@ export async function checkAndIncrementQuota(opts: {
   if (decision === 'reject') {
     throw new HttpsError('resource-exhausted', 'AI quota reached for this month');
   }
+
+  // Lets the caller hand the unit back when the AI provider fails, so
+  // outages / misconfiguration don't burn the user's monthly allowance.
+  const countedField = decision === 'bypass' ? 'premiumCalls' : field;
+  return {
+    refund: async () => {
+      try {
+        await ref.set(
+          { [countedField]: admin.firestore.FieldValue.increment(-1) },
+          { merge: true },
+        );
+      } catch (e) {
+        console.warn('quota refund failed', e);
+      }
+    },
+  };
 }
 
 function _yearMonth(d: Date): string {

@@ -54,7 +54,7 @@ export const forecastSpending = onCall(
       windowSeconds: 60,
       maxCalls: 3,
     });
-    await checkAndIncrementQuota({ uid, field: 'forecast' });
+    const quota = await checkAndIncrementQuota({ uid, field: 'forecast' });
 
     const context = await buildForecastContext(uid);
 
@@ -70,6 +70,7 @@ export const forecastSpending = onCall(
       raw = await provider.generateJson({ system, user });
     } catch (e) {
       console.error('forecastSpending: provider error', e);
+      await quota.refund();
       throw new HttpsError('internal', 'AI provider error');
     }
 

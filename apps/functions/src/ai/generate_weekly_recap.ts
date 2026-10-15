@@ -51,7 +51,7 @@ export const generateWeeklyRecap = onCall(
       windowSeconds: 60,
       maxCalls: 3,
     });
-    await checkAndIncrementQuota({ uid, field: 'recap' });
+    const quota = await checkAndIncrementQuota({ uid, field: 'recap' });
 
     const input = _validateInput(request.data);
     const weekStart = _resolveWeekStart(input.weekStart);
@@ -72,6 +72,7 @@ export const generateWeeklyRecap = onCall(
       raw = await provider.generateJson({ system, user });
     } catch (e) {
       console.error('generateWeeklyRecap: provider error', e);
+      await quota.refund();
       throw new HttpsError('internal', 'AI provider error');
     }
 

@@ -60,7 +60,7 @@ export const aiCoachChat = onCall(
       windowSeconds: 60,
       maxCalls: 5,
     });
-    await checkAndIncrementQuota({ uid, field: 'chat' });
+    const quota = await checkAndIncrementQuota({ uid, field: 'chat' });
 
     const input = _validateInput(request.data);
     const sessionId = input.sessionId ?? `${uid}_s_${Date.now()}`;
@@ -111,6 +111,7 @@ export const aiCoachChat = onCall(
       raw = await provider.generateJson({ system, user });
     } catch (e) {
       console.error('aiCoachChat: provider error', e);
+      await quota.refund();
       throw new HttpsError('internal', 'AI provider error');
     }
 

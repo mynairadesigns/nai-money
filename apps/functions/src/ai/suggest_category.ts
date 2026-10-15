@@ -43,7 +43,7 @@ export const suggestCategory = onCall(
       windowSeconds: 60,
       maxCalls: 5,
     });
-    await checkAndIncrementQuota({ uid, field: 'categorize' });
+    const quota = await checkAndIncrementQuota({ uid, field: 'categorize' });
 
     const input = _validateInput(request.data);
 
@@ -59,6 +59,7 @@ export const suggestCategory = onCall(
       raw = await provider.generateJson({ system, user });
     } catch (e) {
       console.error('suggestCategory: provider error', e);
+      await quota.refund();
       throw new HttpsError('internal', 'AI provider error');
     }
 

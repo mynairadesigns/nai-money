@@ -61,7 +61,7 @@ export const detectAnomalies = onCall(
       windowSeconds: 60,
       maxCalls: 3,
     });
-    await checkAndIncrementQuota({ uid, field: 'anomalies' });
+    const quota = await checkAndIncrementQuota({ uid, field: 'anomalies' });
 
     const context = await buildAnomalyContext(uid);
 
@@ -81,6 +81,7 @@ export const detectAnomalies = onCall(
       raw = await provider.generateJson({ system, user });
     } catch (e) {
       console.error('detectAnomalies: provider error', e);
+      await quota.refund();
       throw new HttpsError('internal', 'AI provider error');
     }
 

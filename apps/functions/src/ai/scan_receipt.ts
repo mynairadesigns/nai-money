@@ -51,7 +51,7 @@ export const scanReceipt = onCall(
       windowSeconds: 60,
       maxCalls: 3,
     });
-    await checkAndIncrementQuota({ uid, field: 'scan' });
+    const quota = await checkAndIncrementQuota({ uid, field: 'scan' });
 
     const { input, imageUrl } = _validateInput(request.data);
 
@@ -66,6 +66,7 @@ export const scanReceipt = onCall(
       raw = await provider.generateJsonWithImage({ system, user, imageUrl });
     } catch (e) {
       console.error('scanReceipt: provider error', e);
+      await quota.refund();
       throw new HttpsError('internal', 'AI provider error');
     }
 

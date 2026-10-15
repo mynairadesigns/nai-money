@@ -59,7 +59,7 @@ export const generateSavingsPlan = onCall(
       windowSeconds: 60,
       maxCalls: 3,
     });
-    await checkAndIncrementQuota({ uid, field: 'savingsPlan' });
+    const quota = await checkAndIncrementQuota({ uid, field: 'savingsPlan' });
 
     const input = _validateInput(request.data);
     const context = await buildSavingsContext(uid, input.goalId);
@@ -76,6 +76,7 @@ export const generateSavingsPlan = onCall(
       raw = await provider.generateJson({ system, user });
     } catch (e) {
       console.error('generateSavingsPlan: provider error', e);
+      await quota.refund();
       throw new HttpsError('internal', 'AI provider error');
     }
 

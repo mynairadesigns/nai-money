@@ -54,7 +54,7 @@ export const computeHealthScore = onCall(
       windowSeconds: 60,
       maxCalls: 3,
     });
-    await checkAndIncrementQuota({ uid, field: 'healthScore' });
+    const quota = await checkAndIncrementQuota({ uid, field: 'healthScore' });
 
     const context = await buildHealthScoreContext(uid);
 
@@ -70,6 +70,7 @@ export const computeHealthScore = onCall(
       raw = await provider.generateJson({ system, user });
     } catch (e) {
       console.error('computeHealthScore: provider error', e);
+      await quota.refund();
       throw new HttpsError('internal', 'AI provider error');
     }
 
