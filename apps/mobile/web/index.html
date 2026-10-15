@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!--
+    `$FLUTTER_BASE_HREF` is replaced by `flutter build web --base-href`.
+    Leave it as-is when hosting at the domain root.
+  -->
+  <base href="$FLUTTER_BASE_HREF">
+
+  <meta charset="UTF-8">
+  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Moneymind — AI-powered personal finance: budgets, savings goals, receipt scanning and an AI money coach.">
+  <meta name="theme-color" content="#8a4f37">
+
+  <!-- iOS / Android home-screen install -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Moneymind">
+  <link rel="apple-touch-icon" href="icons/Icon-192.png">
+
+  <link rel="icon" type="image/png" href="favicon.png"/>
+  <link rel="manifest" href="manifest.json">
+  <title>Moneymind</title>
+
+  <style>
+    /* Simple splash while the Flutter engine loads (a few MB on first visit). */
+    html, body { margin: 0; height: 100%; background: #faf6f2; }
+    @media (prefers-color-scheme: dark) { html, body { background: #1c1714; } }
+    #mm-loading { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; }
+    #mm-loading img { width: 72px; height: 72px; border-radius: 18px; animation: mm-pulse 1.4s ease-in-out infinite; }
+    @keyframes mm-pulse { 0%,100% { opacity: .55; transform: scale(.96); } 50% { opacity: 1; transform: scale(1); } }
+  </style>
+</head>
+<body>
+  <div id="mm-loading"><img src="icons/Icon-192.png" alt="Moneymind"></div>
+  <script>
+    // Remove the splash as soon as Flutter paints its first frame.
+    window.addEventListener('flutter-first-frame', function () {
+      var el = document.getElementById('mm-loading');
+      if (el) el.remove();
+    });
+    // Fallback in case the event is missed.
+    setTimeout(function () {
+      var el = document.getElementById('mm-loading');
+      if (el) el.remove();
+    }, 20000);
+  </script>
+  <script src="flutter_bootstrap.js" async></script>
+</body>
+</html>

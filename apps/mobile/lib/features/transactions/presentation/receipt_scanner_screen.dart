@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -75,7 +73,8 @@ class _ReceiptScannerScreenState extends ConsumerState<ReceiptScannerScreen> {
       final storage = ref.read(storageServiceProvider);
       final res = await storage.uploadReceiptTemp(
         uid: uid,
-        file: File(picked.path),
+        bytes: await picked.readAsBytes(),
+        contentType: picked.mimeType ?? 'image/jpeg',
       );
       downloadUrl = res.downloadUrl;
       tempStoragePath = res.storagePath;

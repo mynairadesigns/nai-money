@@ -2,8 +2,22 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
+    // Billing fields only Cloud Functions (admin SDK) may set. Before this
+    // guard, any signed-in user could write `premiumStatus: 'premium'` to
+    // their own doc and bypass the server-side AI quota — trivially so from
+    // a browser console once the app is on the web.
+    function billingKeys() {
+      return ['premiumStatus', 'premiumExpiry', 'premiumSource', 'premiumPlan',
+              'paystackCustomerCode', 'paystackSubscriptionCode',
+              'paystackSubscriptionStatus'];
+    }
+
     match /users/{userId} {
-      allow read, write: if request.auth != null && request.auth.uid == userId;
+      allow read, delete: if request.auth != null && request.auth.uid == userId;
+      allow create: if request.auth != null && request.auth.uid == userId
+        && !request.resource.data.keys().hasAny(billingKeys());
+      allow update: if request.auth != null && request.auth.uid == userId
+        && !request.resource.data.diff(resource.data).affectedKeys().hasAny(billingKeys());
 
       // Client may read its own AI quota counters; only Functions (admin SDK) may write.
       match /aiUsage/{yearMonth} {
@@ -31,5 +45,7 @@ service cloud.firestore {
     match /adminAuditLog/{document=**}     { allow read, write: if false; }
     match /adminUsers/{document=**}        { allow read, write: if false; }
     match /revenueCatEvents/{document=**}  { allow read, write: if false; }
+    match /paystackTransactions/{document=**} { allow read, write: if false; }
+    match /paystackCustomers/{document=**}    { allow read, write: if false; }
   }
 }

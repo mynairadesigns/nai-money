@@ -84,5 +84,16 @@ QueryExecutor _openConnection() {
   // drift_flutter's `driftDatabase` helper handles the application documents
   // directory, isolate setup, and uses `sqlite3_flutter_libs` under the hood.
   // SQLCipher encryption will be wired up in P7 polish.
-  return driftDatabase(name: 'finance_ai');
+  //
+  // Web: drift runs SQLite compiled to WebAssembly inside a worker and
+  // persists to OPFS / IndexedDB (whichever the browser supports). Both
+  // files below live in `web/` and must match the locked drift / sqlite3
+  // versions — see WEB_SETUP.md.
+  return driftDatabase(
+    name: 'finance_ai',
+    web: DriftWebOptions(
+      sqlite3Wasm: Uri.parse('sqlite3.wasm'),
+      driftWorker: Uri.parse('drift_worker.js'),
+    ),
+  );
 }

@@ -1,12 +1,15 @@
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../../core/providers/auth_provider.dart';
 import '../../../core/theme/shapes.dart';
 import '../../../core/theme/spacing.dart';
 import '../../../data/remote/billing_service.dart';
+import '../../../data/remote/paystack_billing_service.dart';
 import '../providers/premium_providers.dart';
 
 /// Settings → Subscription. Two faces:
@@ -52,7 +55,47 @@ class _SubscriptionScreenState extends ConsumerState<SubscriptionScreen> {
     }
   }
 
+  /// Web: subscriptions bought here are Paystack subscriptions, managed on
+  /// a Paystack-hosted page (cancel / change card).
+  Future<void> _manageWeb() async {
+    final uid = ref.read(authStateProvider).value?.uid;
+    final source = uid == null
+        ? null
+        : ref.read(userDocProvider(uid)).value?['premiumSource'] as String?;
+    if (source == 'revenuecat') {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'This plan was bought in the mobile app — manage it in the '
+            'App Store / Google Play on your phone.',
+          ),
+        ),
+      );
+      return;
+    }
+    try {
+      final link = await ref.read(paystackBillingServiceProvider).manageLink();
+      if (!mounted) return;
+      if (link == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('No renewing subscription to manage.'),
+          ),
+        );
+        return;
+      }
+      // Same tab: a new-tab open after an `await` is popup-blocked in Safari.
+      await launchUrl(link, webOnlyWindowName: '_self');
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Couldn't open subscription manager: $e")),
+      );
+    }
+  }
+
   Future<void> _manage() async {
+    if (kIsWeb) return _manageWeb();
     try {
       final info = await Purchases.getCustomerInfo();
       final url = info.managementURL;
@@ -108,13 +151,18 @@ class _SubscriptionScreenState extends ConsumerState<SubscriptionScreen> {
                 leading: const Icon(Icons.tune),
                 title: const Text('Manage subscription'),
                 subtitle: const Text(
-                  'Cancel or change plan in the App Store / Google Play',
+                  kIsWeb
+                      ? 'Cancel or change card on Paystack'
+                      : 'Cancel or change plan in the App Store / Google Play',
                 ),
                 trailing: const Icon(Icons.open_in_new, size: 18),
                 onTap: _manage,
               ),
             ),
           const SizedBox(height: AppSpacing.sm),
+          // App-store restore has no meaning on web — Paystack purchases are
+          // tied to the account and sync automatically.
+          if (!kIsWeb)
           Card(
             child: ListTile(
               leading: const Icon(Icons.restore),

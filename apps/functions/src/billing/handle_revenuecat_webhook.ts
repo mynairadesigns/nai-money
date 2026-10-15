@@ -3,6 +3,7 @@ import { defineSecret } from 'firebase-functions/params';
 import { onRequest } from 'firebase-functions/v2/https';
 
 import { REGION } from '../utils/region';
+import { hasActivePaystackEntitlement } from './paystack_logic';
 
 if (!admin.apps.length) {
   admin.initializeApp();
@@ -95,6 +96,7 @@ export const handleRevenueCatWebhook = onRequest(
           {
             premiumStatus: 'premium',
             premiumExpiry: expiry,
+            premiumSource: 'revenuecat',
             updatedAt: admin.firestore.FieldValue.serverTimestamp(),
           },
           { merge: true },
@@ -102,6 +104,16 @@ export const handleRevenueCatWebhook = onRequest(
         handled = true;
         console.log(`RevenueCat: granted premium to ${uid} (${type})`);
       } else if (revokeEvents.has(type)) {
+        // A RevenueCat (app store) cancellation must not wipe out premium
+        // the user separately bought on the web via Paystack.
+        const current = (await userRef.get()).data();
+        if (hasActivePaystackEntitlement(current, Date.now())) {
+          console.log(`RevenueCat: ${type} for ${uid} ignored — active Paystack entitlement`);
+          handled = true;
+          await _logEvent({ type, uid, productId, expirationMs, handled });
+          res.status(200).send('ok');
+          return;
+        }
         await userRef.set(
           {
             premiumStatus: 'free',

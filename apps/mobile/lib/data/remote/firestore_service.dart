@@ -29,8 +29,9 @@ class FirestoreService {
         'photoUrl': photoUrl,
         'defaultCurrency': 'USD',
         'monthlyIncome': null,
-        'premiumStatus': 'free',
-        'premiumExpiry': null,
+        // premiumStatus / premiumExpiry are seeded server-side by the
+        // `onUserCreate` trigger and are write-protected in firestore.rules.
+        // (Writing 'free' here also used to reset returning premium users.)
         'financialHealthScore': null,
         'createdAt': now,
         'lastSyncAt': now,

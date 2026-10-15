@@ -26,6 +26,13 @@ export interface UserDocument {
   monthlyIncome: number | null;
   premiumStatus: 'free' | 'premium';
   premiumExpiry: FirestoreTimestamp | null;
+  /** Which billing system granted premium. Server-written only. */
+  premiumSource?: 'revenuecat' | 'paystack';
+  /** Paystack plan last paid for (web billing). */
+  premiumPlan?: 'monthly' | 'yearly' | 'lifetime';
+  paystackCustomerCode?: string;
+  paystackSubscriptionCode?: string;
+  paystackSubscriptionStatus?: 'active' | 'non-renewing' | 'disabled';
   financialHealthScore: number | null;
   createdAt: FirestoreTimestamp;
   lastSyncAt: FirestoreTimestamp;

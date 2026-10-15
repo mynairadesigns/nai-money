@@ -1,4 +1,3 @@
-import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
@@ -78,18 +77,22 @@ final syncLifecycleProvider = Provider<void>((ref) {
       // Remote Config console (`revenuecat_api_key_ios` / `_android`);
       // if they're not set yet, we skip init quietly and the paywall
       // will render its "not configured" empty state.
-      try {
-        final remoteConfig = FirebaseRemoteConfig.instance;
-        final apiKey = Platform.isIOS
-            ? remoteConfig.getString('revenuecat_api_key_ios')
-            : remoteConfig.getString('revenuecat_api_key_android');
-        if (apiKey.isNotEmpty) {
-          final billing = ref.read(billingServiceProvider);
-          await billing.configure(apiKey);
-          await billing.identify(user.uid);
+      // Web: no RevenueCat — Paystack billing is server-driven and needs
+      // no client SDK init.
+      if (!kIsWeb) {
+        try {
+          final remoteConfig = FirebaseRemoteConfig.instance;
+          final apiKey = defaultTargetPlatform == TargetPlatform.iOS
+              ? remoteConfig.getString('revenuecat_api_key_ios')
+              : remoteConfig.getString('revenuecat_api_key_android');
+          if (apiKey.isNotEmpty) {
+            final billing = ref.read(billingServiceProvider);
+            await billing.configure(apiKey);
+            await billing.identify(user.uid);
+          }
+        } catch (e) {
+          debugPrint('syncLifecycle: billing init skipped: $e');
         }
-      } catch (e) {
-        debugPrint('syncLifecycle: billing init skipped: $e');
       }
     } else if (prev?.value != null) {
       // Sign-out: stop the sync engine. The per-uid setup flag stays put

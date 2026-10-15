@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -50,15 +51,17 @@ class SettingsScreen extends ConsumerWidget {
           _SettingsTile(
             icon: Icons.lock_outline,
             title: 'Security',
-            subtitle: 'PIN, biometric, auto-lock',
+            subtitle: kIsWeb ? 'PIN, auto-lock' : 'PIN, biometric, auto-lock',
             onTap: () => context.push('/settings/security'),
           ),
-          _SettingsTile(
-            icon: Icons.notifications_outlined,
-            title: 'Notifications',
-            subtitle: 'Budgets, bills, debts, goals',
-            onTap: () => context.push('/settings/notifications'),
-          ),
+          // Local notifications are mobile-only.
+          if (!kIsWeb)
+            _SettingsTile(
+              icon: Icons.notifications_outlined,
+              title: 'Notifications',
+              subtitle: 'Budgets, bills, debts, goals',
+              onTap: () => context.push('/settings/notifications'),
+            ),
           _SettingsTile(
             icon: Icons.workspace_premium_outlined,
             title: 'Subscription',

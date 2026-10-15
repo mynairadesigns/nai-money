@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -9,6 +10,7 @@ import '../../features/auth/presentation/sign_in_screen.dart';
 import '../../features/auth/presentation/sign_up_screen.dart';
 import '../../features/billing/presentation/paywall_screen.dart';
 import '../../features/billing/presentation/subscription_screen.dart';
+import '../../features/billing/presentation/web_paywall_screen.dart';
 import '../../features/budgets/presentation/add_budget_screen.dart';
 import '../../features/budgets/presentation/budget_detail_screen.dart';
 import '../../features/budgets/presentation/budgets_list_screen.dart';
@@ -331,7 +333,9 @@ final appRouterProvider = Provider<GoRouter>((ref) {
     // ---- Paywall --------------------------------------------------------
     GoRoute(
       path: '/paywall',
-      builder: (_, _) => const PaywallScreen(),
+      // Web has no app-store billing → Paystack paywall.
+      builder: (_, _) =>
+          kIsWeb ? const WebPaywallScreen() : const PaywallScreen(),
     ),
     ],
   );

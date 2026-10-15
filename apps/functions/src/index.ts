@@ -14,5 +14,12 @@ export { detectSubscriptions } from './ai/subscriptions/detect_subscriptions';
 export { confirmSubscription } from './ai/subscriptions/confirm_subscription';
 export { handleRevenueCatWebhook } from './billing/handle_revenuecat_webhook';
 export { refreshEntitlement } from './billing/refresh_entitlement';
+export {
+  getPaystackPrices,
+  startPaystackCheckout,
+  verifyPaystackPayment,
+  getPaystackManageLink,
+  handlePaystackWebhook,
+} from './billing/paystack';
 export { resetMonthlyAIQuotas } from './schedulers/reset_monthly_quotas';
 export { aggregatePlatformStats } from './schedulers/aggregate_platform_stats';

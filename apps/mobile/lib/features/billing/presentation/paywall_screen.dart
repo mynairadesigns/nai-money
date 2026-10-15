@@ -218,7 +218,7 @@ class _PaywallScreenState extends ConsumerState<PaywallScreen> {
         const SizedBox(height: AppSpacing.xl),
 
         // Feature comparison.
-        const _FeatureTable(),
+        const PaywallFeatureTable(),
         const SizedBox(height: AppSpacing.xl),
 
         // Pricing cards.
@@ -301,8 +301,9 @@ class _PaywallScreenState extends ConsumerState<PaywallScreen> {
       pkg.packageType == PackageType.lifetime;
 }
 
-class _FeatureTable extends StatelessWidget {
-  const _FeatureTable();
+/// Free-vs-Premium comparison card. Shared with the web (Paystack) paywall.
+class PaywallFeatureTable extends StatelessWidget {
+  const PaywallFeatureTable({super.key});
 
   @override
   Widget build(BuildContext context) {

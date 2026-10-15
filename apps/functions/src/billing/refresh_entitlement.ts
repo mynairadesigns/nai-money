@@ -3,6 +3,7 @@ import { defineSecret } from 'firebase-functions/params';
 import { HttpsError, onCall } from 'firebase-functions/v2/https';
 
 import { REGION } from '../utils/region';
+import { hasActivePaystackEntitlement } from './paystack_logic';
 
 if (!admin.apps.length) {
   admin.initializeApp();
@@ -92,9 +93,19 @@ export const refreshEntitlement = onCall(
       throw new HttpsError('internal', 'Could not refresh entitlement');
     }
 
-    await admin.firestore().doc(`users/${uid}`).set(
+    const userRef = admin.firestore().doc(`users/${uid}`);
+    if (!isPremium) {
+      // Not premium on RevenueCat — but they may have paid on the web.
+      const current = (await userRef.get()).data();
+      if (hasActivePaystackEntitlement(current, Date.now())) {
+        const exp = current?.premiumExpiry as admin.firestore.Timestamp | null;
+        return { isPremium: true, expiryMs: exp ? exp.toMillis() : null };
+      }
+    }
+    await userRef.set(
       {
         premiumStatus: isPremium ? 'premium' : 'free',
+        ...(isPremium ? { premiumSource: 'revenuecat' } : {}),
         premiumExpiry:
           isPremium && expiryMs
             ? admin.firestore.Timestamp.fromMillis(expiryMs)

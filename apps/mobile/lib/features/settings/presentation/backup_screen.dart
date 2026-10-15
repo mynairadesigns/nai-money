@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:share_plus/share_plus.dart';
@@ -129,8 +130,23 @@ class _BackupScreenState extends ConsumerState<BackupScreen> {
       final filename =
           'moneymind_export_${now.year}${now.month.toString().padLeft(2, '0')}${now.day.toString().padLeft(2, '0')}.json';
 
-      // share_plus 10.x: Share.share(text, subject:)
-      await Share.share(json, subject: filename);
+      if (kIsWeb) {
+        // Web: hand over a real .json file. share_plus uses the browser's
+        // share sheet where available and otherwise downloads the file.
+        await Share.shareXFiles(
+          [
+            XFile.fromData(
+              utf8.encode(json),
+              mimeType: 'application/json',
+              name: filename,
+            ),
+          ],
+          subject: filename,
+        );
+      } else {
+        // share_plus 10.x: Share.share(text, subject:)
+        await Share.share(json, subject: filename);
+      }
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(

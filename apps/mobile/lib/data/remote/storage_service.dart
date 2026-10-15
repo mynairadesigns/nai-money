@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -21,14 +21,19 @@ class StorageService {
   /// path (so we can move/delete the temp later).
   Future<({String downloadUrl, String storagePath})> uploadReceiptTemp({
     required String uid,
-    required File file,
+    required Uint8List bytes,
+    String contentType = 'image/jpeg',
   }) async {
     final id = DateTime.now().microsecondsSinceEpoch.toString();
     final path = 'users/$uid/receipts/temp/$id.jpg';
     final ref = _storage.ref(path);
-    final task = await ref.putFile(
-      file,
-      SettableMetadata(contentType: 'image/jpeg'),
+    // `putData` (not `putFile`) so the same path works on web, where there
+    // is no file system — the picker hands us bytes on every platform.
+    final task = await ref.putData(
+      bytes,
+      // Real type matters: the Gemini provider forwards the stored
+      // Content-Type, and browsers often hand back PNG/WebP, not JPEG.
+      SettableMetadata(contentType: contentType),
     );
     final url = await task.ref.getDownloadURL();
     return (downloadUrl: url, storagePath: path);
@@ -49,9 +54,15 @@ class StorageService {
     if (bytes == null) {
       throw StateError('Temp receipt $tempStoragePath was empty or missing');
     }
+    String contentType = 'image/jpeg';
+    try {
+      contentType = (await tempRef.getMetadata()).contentType ?? contentType;
+    } catch (_) {
+      // Fall back to JPEG.
+    }
     await permanentRef.putData(
       bytes,
-      SettableMetadata(contentType: 'image/jpeg'),
+      SettableMetadata(contentType: contentType),
     );
     final url = await permanentRef.getDownloadURL();
     try {

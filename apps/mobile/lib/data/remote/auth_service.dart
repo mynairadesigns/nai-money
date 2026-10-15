@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
@@ -67,6 +68,24 @@ class AuthService {
   }
 
   Future<UserCredential> signInWithGoogle() async {
+    // Web: google_sign_in v7 has no `authenticate()` on web (it only renders
+    // Google's own button). Firebase Auth's popup flow is the simplest
+    // equivalent and needs no extra client-id wiring — just make sure your
+    // web domain is listed under Firebase Auth → Settings → Authorized domains.
+    if (kIsWeb) {
+      try {
+        final provider = GoogleAuthProvider()
+          ..setCustomParameters({'prompt': 'select_account'});
+        return await _auth.signInWithPopup(provider);
+      } on FirebaseAuthException catch (e) {
+        if (e.code == 'popup-closed-by-user' ||
+            e.code == 'cancelled-popup-request' ||
+            e.code == 'user-cancelled') {
+          throw const CancelledFailure();
+        }
+        throw AuthFailure.fromFirebase(e);
+      }
+    }
     try {
       await _google.initialize();
       final account = await _google.authenticate();
@@ -119,7 +138,9 @@ class AuthService {
   }
 
   Future<void> signOut() async {
-    await _google.signOut().catchError((_) {});
+    if (!kIsWeb) {
+      await _google.signOut().catchError((_) {});
+    }
     await _auth.signOut();
   }
 }

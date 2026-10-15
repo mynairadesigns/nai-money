@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
@@ -24,7 +22,9 @@ class NotificationService {
   // ---------------------------------------------------------------------------
 
   Future<void> init() async {
-    if (_initialised) return;
+    // flutter_local_notifications has no web implementation. Leaving
+    // `_initialised == false` makes every show/schedule call a no-op.
+    if (_initialised || kIsWeb) return;
 
     // Timezone: initialise the database, then GUARANTEE `tz.local` is set.
     // We seed it with UTC first (always a valid location) so the late
@@ -88,14 +88,15 @@ class NotificationService {
   /// Requests notification permission on iOS and Android 13+.
   /// Returns `true` if granted (or platform doesn't require runtime ask).
   Future<bool> requestPermissions() async {
+    if (kIsWeb) return false;
     try {
-      if (Platform.isIOS) {
+      if (defaultTargetPlatform == TargetPlatform.iOS) {
         final granted = await _plugin
             .resolvePlatformSpecificImplementation<
                 IOSFlutterLocalNotificationsPlugin>()
             ?.requestPermissions(alert: true, badge: true, sound: true);
         return granted ?? false;
-      } else if (Platform.isAndroid) {
+      } else if (defaultTargetPlatform == TargetPlatform.android) {
         final granted = await _plugin
             .resolvePlatformSpecificImplementation<
                 AndroidFlutterLocalNotificationsPlugin>()

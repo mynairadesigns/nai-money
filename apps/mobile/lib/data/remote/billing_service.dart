@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -20,6 +21,9 @@ import '../../core/providers/firestore_provider.dart';
 /// actual `configure(...)` + `identify(...)` calls.
 class BillingService {
   BillingService(this._firestore);
+  // Kept for API compatibility (tests / provider wiring); entitlement
+  // writes now go through the `refreshEntitlement` callable.
+  // ignore: unused_field
   final FirebaseFirestore _firestore;
 
   bool _initialized = false;
@@ -99,34 +103,30 @@ class BillingService {
     return DateTime.tryParse(expiresDate)?.isAfter(DateTime.now()) ?? false;
   }
 
+  /// Asks the server to re-read the entitlement from RevenueCat and write
+  /// `users/{uid}.premiumStatus` itself. The client can no longer write
+  /// those fields directly (firestore.rules protects them — otherwise any
+  /// user could grant themselves premium).
   Future<void> _mirrorToFirestore(CustomerInfo info) async {
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) return;
-    final ent = info.entitlements.active['premium'];
-    final isPrem = ent != null;
     if (kDebugMode) {
       // Diagnostic: if a purchase succeeds but premium stays free, the
       // granted entitlement isn't named exactly `premium` (or no product is
-      // attached to it). `active` = currently-entitled; `all` = every
-      // configured entitlement RevenueCat knows about for this customer.
+      // attached to it).
       debugPrint(
         'BillingService mirror: active=${info.entitlements.active.keys.toList()} '
-        'all=${info.entitlements.all.keys.toList()} → premium=$isPrem',
+        'all=${info.entitlements.all.keys.toList()}',
       );
     }
-    final expiresDate = ent?.expirationDate != null
-        ? DateTime.tryParse(ent!.expirationDate!)
-        : null;
     try {
-      await _firestore.doc('users/${user.uid}').set({
-        'premiumStatus': isPrem ? 'premium' : 'free',
-        'premiumExpiry': isPrem && expiresDate != null
-            ? Timestamp.fromDate(expiresDate)
-            : null,
-        'updatedAt': FieldValue.serverTimestamp(),
-      }, SetOptions(merge: true));
+      await FirebaseFunctions.instanceFor(region: 'asia-southeast1')
+          .httpsCallable('refreshEntitlement')
+          .call<Map<dynamic, dynamic>>();
     } catch (e) {
-      debugPrint('BillingService._mirrorToFirestore failed: $e');
+      // Best-effort — the RevenueCat webhook is the authoritative path and
+      // the local RC entitlement already unlocks premium in the UI.
+      debugPrint('BillingService._mirrorToFirestore (refreshEntitlement) failed: $e');
     }
   }
 }
@@ -141,6 +141,12 @@ final billingServiceProvider = Provider<BillingService>((ref) {
 /// First yields the initial poll (which may be null if RC isn't
 /// configured yet); subsequent emissions come from RC's listener.
 final customerInfoProvider = StreamProvider<CustomerInfo?>((ref) async* {
+  // Web has no app-store billing — premium comes from the Firestore mirror
+  // written by the Paystack functions (see isPremiumProvider).
+  if (kIsWeb) {
+    yield null;
+    return;
+  }
   final billing = ref.watch(billingServiceProvider);
   final initial = await billing.getCustomerInfo();
   yield initial;

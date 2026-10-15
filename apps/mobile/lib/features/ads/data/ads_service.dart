@@ -1,6 +1,5 @@
-import 'dart:io';
-
 import 'package:firebase_remote_config/firebase_remote_config.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
@@ -24,22 +23,24 @@ class AdsService {
   bool _initialized = false;
 
   Future<void> initialize() async {
-    if (_initialized) return;
+    if (_initialized || kIsWeb) return; // AdMob is mobile-only.
     await MobileAds.instance.initialize();
     _initialized = true;
   }
 
-  bool get rcAdsEnabled => _rc.getBool('ads_enabled');
+  /// Always false on web — AdMob has no web SDK. This is the single gate
+  /// every ad widget/controller reads (via `adsEnabledProvider`).
+  bool get rcAdsEnabled => !kIsWeb && _rc.getBool('ads_enabled');
 
   String bannerAdUnitId() {
-    if (Platform.isIOS) return _rc.getString('admob_banner_id_ios');
-    if (Platform.isAndroid) return _rc.getString('admob_banner_id_android');
+    if (defaultTargetPlatform == TargetPlatform.iOS) return _rc.getString('admob_banner_id_ios');
+    if (defaultTargetPlatform == TargetPlatform.android) return _rc.getString('admob_banner_id_android');
     return '';
   }
 
   String interstitialAdUnitId() {
-    if (Platform.isIOS) return _rc.getString('admob_interstitial_id_ios');
-    if (Platform.isAndroid) {
+    if (defaultTargetPlatform == TargetPlatform.iOS) return _rc.getString('admob_interstitial_id_ios');
+    if (defaultTargetPlatform == TargetPlatform.android) {
       return _rc.getString('admob_interstitial_id_android');
     }
     return '';

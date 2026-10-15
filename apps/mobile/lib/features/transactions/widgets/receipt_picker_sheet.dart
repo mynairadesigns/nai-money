@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -23,7 +24,14 @@ class _ReceiptPickerSheet extends StatelessWidget {
   Future<void> _pick(BuildContext context, ImageSource source) async {
     final picker = ImagePicker();
     try {
-      final file = await picker.pickImage(source: source, imageQuality: 80);
+      final file = await picker.pickImage(
+        source: source,
+        imageQuality: 80,
+        // Web: browsers hand back the original photo (often > the 5 MB
+        // Storage rule); a max dimension makes image_picker re-encode it.
+        maxWidth: kIsWeb ? 2000.0 : null,
+        maxHeight: kIsWeb ? 2000.0 : null,
+      );
       if (!context.mounted) return;
       Navigator.of(context).pop(file);
     } catch (_) {
@@ -61,7 +69,7 @@ class _ReceiptPickerSheet extends StatelessWidget {
           ),
           ListTile(
             leading: const Icon(Icons.photo_library_outlined),
-            title: const Text('Choose from library'),
+            title: const Text(kIsWeb ? 'Upload an image' : 'Choose from library'),
             onTap: () => _pick(context, ImageSource.gallery),
           ),
           const Divider(height: 0),

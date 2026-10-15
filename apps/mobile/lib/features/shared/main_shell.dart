@@ -73,8 +73,75 @@ class MainShell extends StatelessWidget {
     );
   }
 
+  /// Width at which the bottom bar becomes a side rail (tablets, desktop
+  /// browsers). Measured with a LayoutBuilder so it respects the app-wide
+  /// max-width wrapper in `main.dart`.
+  static const _railBreakpoint = 840.0;
+
   @override
   Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, constraints) => constraints.maxWidth >= _railBreakpoint
+          ? _buildWide(context)
+          : _buildCompact(context),
+    );
+  }
+
+  Widget _buildWide(BuildContext context) {
+    final theme = Theme.of(context);
+    return Scaffold(
+      body: Row(
+        children: [
+          NavigationRail(
+            selectedIndex: navigationShell.currentIndex,
+            onDestinationSelected: _onTabTapped,
+            labelType: NavigationRailLabelType.all,
+            backgroundColor: theme.colorScheme.surface,
+            leading: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8),
+              child: FloatingActionButton(
+                onPressed: () => _onAddPressed(context),
+                elevation: 0,
+                shape: const RoundedRectangleBorder(
+                  borderRadius: AppBorderRadius.lg,
+                ),
+                backgroundColor: theme.colorScheme.primary,
+                foregroundColor: theme.colorScheme.onPrimary,
+                tooltip: 'Add',
+                child: const Icon(Icons.add),
+              ),
+            ),
+            destinations: const [
+              NavigationRailDestination(
+                icon: Icon(Icons.home_outlined),
+                selectedIcon: Icon(Icons.home),
+                label: Text('Home'),
+              ),
+              NavigationRailDestination(
+                icon: Icon(Icons.receipt_long_outlined),
+                selectedIcon: Icon(Icons.receipt_long),
+                label: Text('Transactions'),
+              ),
+              NavigationRailDestination(
+                icon: Icon(Icons.bar_chart_outlined),
+                selectedIcon: Icon(Icons.bar_chart),
+                label: Text('Reports'),
+              ),
+              NavigationRailDestination(
+                icon: Icon(Icons.auto_awesome_outlined),
+                selectedIcon: Icon(Icons.auto_awesome),
+                label: Text('AI Coach'),
+              ),
+            ],
+          ),
+          const VerticalDivider(width: 1),
+          Expanded(child: navigationShell),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCompact(BuildContext context) {
     final theme = Theme.of(context);
     final selected = navigationShell.currentIndex;
 
