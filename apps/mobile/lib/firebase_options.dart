@@ -34,7 +34,7 @@ class DefaultFirebaseOptions {
     appId: '1:924103830011:web:6a64a78e51aa6c3d40435e',
     messagingSenderId: '924103830011',
     projectId: 'nai-money',
-    authDomain: 'nai-money.firebaseapp.com',
+    authDomain: 'homa.finance', // custom domain → Google sign-in shows homa.finance
     storageBucket: 'nai-money.firebasestorage.app',
     measurementId: 'G-WCZB7ZQN7B',
   );
