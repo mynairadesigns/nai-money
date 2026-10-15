@@ -120,7 +120,7 @@ class BillingService {
       );
     }
     try {
-      await FirebaseFunctions.instanceFor(region: 'asia-southeast1')
+      await FirebaseFunctions.instanceFor(region: 'europe-west1')
           .httpsCallable('refreshEntitlement')
           .call<Map<dynamic, dynamic>>();
     } catch (e) {

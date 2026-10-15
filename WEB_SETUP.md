@@ -90,7 +90,7 @@ gsutil cors set storage.cors.json gs://YOUR-PROJECT-ID.appspot.com
    ```
 5. **Webhook.** Paystack dashboard → *Settings → API Keys & Webhooks* → **Webhook URL**:
    ```
-   https://asia-southeast1-YOUR-PROJECT-ID.cloudfunctions.net/handlePaystackWebhook
+   https://europe-west1-YOUR-PROJECT-ID.cloudfunctions.net/handlePaystackWebhook
    ```
    Set it in **both** Test and Live mode when you go live.
 

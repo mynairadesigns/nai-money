@@ -121,6 +121,6 @@ class PaystackBillingService {
 
 final paystackBillingServiceProvider = Provider<PaystackBillingService>(
   (_) => PaystackBillingService(
-    FirebaseFunctions.instanceFor(region: 'asia-southeast1'),
+    FirebaseFunctions.instanceFor(region: 'europe-west1'),
   ),
 );

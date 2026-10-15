@@ -186,10 +186,10 @@ RC → **Integrations → Webhooks → Add**:
 - **URL** — your deployed function's trigger URL. Get the exact value from the
   `firebase deploy` output or **Firebase Console → Functions →
   `handleRevenueCatWebhook` → trigger URL**. It is region-pinned to
-  `asia-southeast1`:
+  `europe-west1`:
 
   ```
-  https://asia-southeast1-<your-project-id>.cloudfunctions.net/handleRevenueCatWebhook
+  https://europe-west1-<your-project-id>.cloudfunctions.net/handleRevenueCatWebhook
   ```
 
 - **Authorization header value** — `Bearer <your-secret>` (include the literal

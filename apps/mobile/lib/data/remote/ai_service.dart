@@ -171,10 +171,10 @@ class AIService {
 }
 
 /// FirebaseFunctions instance pinned to Singapore — every Function is
-/// deployed to `asia-southeast1` (CLAUDE.md §7). The SDK defaults to
+/// deployed to `europe-west1` (CLAUDE.md §7). The SDK defaults to
 /// us-central1, so this pinning is mandatory.
 final aiFunctionsProvider = Provider<FirebaseFunctions>(
-  (_) => FirebaseFunctions.instanceFor(region: 'asia-southeast1'),
+  (_) => FirebaseFunctions.instanceFor(region: 'europe-west1'),
 );
 
 final aiServiceProvider = Provider<AIService>(

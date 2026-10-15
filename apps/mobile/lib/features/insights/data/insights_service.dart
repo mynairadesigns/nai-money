@@ -52,7 +52,7 @@ class InsightsService {
 /// Duplicate of `aiFunctionsProvider` — kept independent so the insights
 /// module doesn't import from `data/remote/ai_service.dart`.
 final insightsFunctionsProvider = Provider<FirebaseFunctions>(
-  (_) => FirebaseFunctions.instanceFor(region: 'asia-southeast1'),
+  (_) => FirebaseFunctions.instanceFor(region: 'europe-west1'),
 );
 
 final insightsServiceProvider = Provider<InsightsService>(

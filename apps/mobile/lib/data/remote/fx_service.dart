@@ -12,7 +12,7 @@ class FxRate {
 }
 
 /// Wraps the `getFxRate` Firebase callable. Region-pinned client-side
-/// to match the function's deployment region (`asia-southeast1`) — the
+/// to match the function's deployment region (`europe-west1`) — the
 /// SDK defaults to `us-central1` otherwise.
 ///
 /// Maintains an in-memory per-session cache keyed by `"<FROM>-<TO>"`,
@@ -24,7 +24,7 @@ class FxService {
   final FirebaseFunctions _functions;
   final Map<String, FxRate> _cache = {};
 
-  static const String _region = 'asia-southeast1';
+  static const String _region = 'europe-west1';
 
   Future<FxRate> fetch({required String from, required String to}) async {
     final key = '$from-$to';

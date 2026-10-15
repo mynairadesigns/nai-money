@@ -18,11 +18,11 @@ class RecapService {
   }
 }
 
-/// Pinned to `asia-southeast1` to match Functions deployment region
+/// Pinned to `europe-west1` to match Functions deployment region
 /// (CLAUDE.md §7). Duplicated per service file by design — keeps each
 /// AI module independent.
 final recapFunctionsProvider = Provider<FirebaseFunctions>(
-  (_) => FirebaseFunctions.instanceFor(region: 'asia-southeast1'),
+  (_) => FirebaseFunctions.instanceFor(region: 'europe-west1'),
 );
 
 final recapServiceProvider = Provider<RecapService>(

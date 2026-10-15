@@ -158,7 +158,7 @@ Firebase's Admin SDK normally authenticates through Application Default Credenti
 
 ### 4. Region
 
-Set the function region near your data. Firestore and all Cloud Functions are in `asia-southeast1` (Singapore), so pick **Singapore (sin1)** under Settings → Functions. Leaving it in the US adds a round trip to every Firestore read.
+Set the function region near your data. Firestore and all Cloud Functions are in `europe-west1` (Singapore), so pick **Singapore (sin1)** under Settings → Functions. Leaving it in the US adds a round trip to every Firestore read.
 
 > Set it in the dashboard rather than in `vercel.json`. Multi-region is a Pro feature, so a `regions` entry in the file is a deploy-time failure on Hobby, whereas the project setting works on every plan.
 
@@ -175,7 +175,7 @@ Push to your default branch and Vercel builds automatically. Every pull request 
 The app also builds to a standalone Node server (`output: 'standalone'`, enabled everywhere except Vercel), so any container host works. From the repository root:
 
 ```bash
-gcloud run deploy moneymind-admin --source . --region asia-southeast1
+gcloud run deploy moneymind-admin --source . --region europe-west1
 ```
 
 or build `apps/admin/Dockerfile` yourself. On a Google runtime the runtime service account supplies credentials automatically, so `FIREBASE_SERVICE_ACCOUNT_JSON` is not needed — grant that account `roles/datastore.user`, `roles/firebaseauth.admin`, and `roles/firebaseremoteconfig.admin` instead. **Never bake a service-account key into an image.**

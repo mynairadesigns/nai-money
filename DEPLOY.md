@@ -28,6 +28,6 @@ Add these under *Variables* (not Secrets): `PAYSTACK_PLAN_MONTHLY`,
 `PAYSTACK_PLAN_YEARLY`, `PAYSTACK_LIFETIME_AMOUNT` (kobo), and
 `PAYSTACK_ALLOWED_ORIGINS` if you use a custom domain. Re-run Deploy, then set
 the webhook URL in Paystack:
-`https://asia-southeast1-<project-id>.cloudfunctions.net/handlePaystackWebhook`.
+`https://europe-west1-<project-id>.cloudfunctions.net/handlePaystackWebhook`.
 
 See WEB_SETUP.md for everything else (CORS, test cards, going live).

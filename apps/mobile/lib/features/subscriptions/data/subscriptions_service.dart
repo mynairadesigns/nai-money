@@ -52,7 +52,7 @@ class SubscriptionsService {
 }
 
 final subscriptionsFunctionsProvider = Provider<FirebaseFunctions>(
-  (_) => FirebaseFunctions.instanceFor(region: 'asia-southeast1'),
+  (_) => FirebaseFunctions.instanceFor(region: 'europe-west1'),
 );
 
 final subscriptionsServiceProvider = Provider<SubscriptionsService>(

@@ -83,7 +83,7 @@ Firebase App Hosting is **not** usable here: its buildpack demands a lock file i
 
 ```bash
 # from the repo root
-gcloud run deploy moneymind-admin --source . --region asia-southeast1
+gcloud run deploy moneymind-admin --source . --region europe-west1
 ```
 
 or build `apps/admin/Dockerfile`. On a Google runtime the runtime service account supplies credentials, so no key file is needed — **never bake one into an image.**

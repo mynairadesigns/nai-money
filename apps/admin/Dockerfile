@@ -6,7 +6,7 @@
 #   docker build -f apps/admin/Dockerfile -t moneymind-admin .
 #
 # Or let Cloud Run build it for you, from the repo root:
-#   gcloud run deploy moneymind-admin --source . --region asia-southeast1
+#   gcloud run deploy moneymind-admin --source . --region europe-west1
 #
 # Credentials come from the runtime service account (Application Default
 # Credentials). Never bake a service-account key into this image.
