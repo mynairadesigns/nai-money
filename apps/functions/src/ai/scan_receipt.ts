@@ -54,7 +54,7 @@ export const scanReceipt = onCall(
 
     const { input, imageUrl } = _validateInput(request.data);
 
-    const providerName = await selectProvider({ featureDefault: 'openai' });
+    const providerName = await selectProvider({ featureDefault: 'gemini' });
     const model = providerName === 'openai' ? 'gpt-4o' : 'gemini-2.5-flash';
     const provider = getProvider(providerName, model);
 
