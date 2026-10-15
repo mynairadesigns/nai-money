@@ -104,7 +104,7 @@ class _CoachChatScreenState extends ConsumerState<CoachChatScreen> {
         return 'AI quota reached for this month';
       }
     }
-    return "Couldn't reach Homa Coach";
+    return "Couldn't reach Coach Homa";
   }
 
   @override
@@ -129,7 +129,7 @@ class _CoachChatScreenState extends ConsumerState<CoachChatScreen> {
           icon: const Icon(Icons.close),
           onPressed: () => context.pop(),
         ),
-        title: const Text('Homa Coach'),
+        title: const Text('Coach Homa'),
         actions: [
           PopupMenuButton<String>(
             onSelected: (v) {
@@ -579,7 +579,7 @@ class _Composer extends StatelessWidget {
                 textInputAction: TextInputAction.newline,
                 enabled: enabled,
                 decoration: const InputDecoration(
-                  hintText: 'Ask Homa...',
+                  hintText: 'Ask Coach Homa...',
                   counterText: '',
                 ),
               ),

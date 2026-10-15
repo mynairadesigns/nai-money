@@ -1,6 +1,6 @@
 [
   {
-    "origin": ["https://nai-money.web.app", "https://nai-money.firebaseapp.com", "http://localhost:5000"],
+    "origin": ["https://homa.finance", "https://www.homa.finance", "https://nai-money.web.app", "https://nai-money.firebaseapp.com", "http://localhost:5000"],
     "method": ["GET", "HEAD"],
     "maxAgeSeconds": 3600,
     "responseHeader": ["Content-Type"]

@@ -63,7 +63,7 @@ jobs:
             echo "PAYSTACK_PLAN_YEARLY=${{ vars.PAYSTACK_PLAN_YEARLY }}"
             echo "PAYSTACK_LIFETIME_AMOUNT=${{ vars.PAYSTACK_LIFETIME_AMOUNT || '0' }}"
             echo "PAYSTACK_CURRENCY=${{ vars.PAYSTACK_CURRENCY || 'NGN' }}"
-            echo "PAYSTACK_ALLOWED_ORIGINS=${{ vars.PAYSTACK_ALLOWED_ORIGINS || format('https://{0}.web.app,https://{0}.firebaseapp.com', env.FIREBASE_PROJECT_ID) }}"
+            echo "PAYSTACK_ALLOWED_ORIGINS=${{ vars.PAYSTACK_ALLOWED_ORIGINS || format('https://homa.finance,https://www.homa.finance,https://{0}.web.app,https://{0}.firebaseapp.com', env.FIREBASE_PROJECT_ID) }}"
           } > .env
           cat .env
 

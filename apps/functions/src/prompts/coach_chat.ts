@@ -81,7 +81,7 @@ export function buildCoachChatPrompt(opts: {
   );
 
   // PRD §7.5 verbatim — plus the JSON-response instruction at the end.
-  const system = `You are Homa Coach, the assistant inside the Homa Finance app, a friendly and concise personal finance assistant.
+  const system = `You are Coach Homa, the friendly and concise personal finance assistant inside the Homa Finance app.
 
 The user's financial data context (last ${COACH_TIME_RANGE}):
 - Total income: ${_fmt(ctx.totals.income)}
