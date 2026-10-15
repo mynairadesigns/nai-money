@@ -1,0 +1,84 @@
+# Builds the Flutter web app and deploys everything to Firebase on every
+# push to `main` (or manually from the Actions tab).
+#
+# Needs (repo → Settings → Secrets and variables → Actions):
+#   Secret   FIREBASE_SERVICE_ACCOUNT   service-account JSON (see DEPLOY.md)
+#   Variable PAYSTACK_PLAN_MONTHLY / PAYSTACK_PLAN_YEARLY     (optional, PLN_…)
+#   Variable PAYSTACK_LIFETIME_AMOUNT  kobo, 0 = off          (optional)
+#   Variable PAYSTACK_ALLOWED_ORIGINS  e.g. https://x.web.app (optional)
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy
+  cancel-in-progress: false
+
+env:
+  FIREBASE_PROJECT_ID: __FIREBASE_PROJECT_ID__
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install pnpm + Firebase CLI
+        run: npm install -g pnpm@9 firebase-tools
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      # ---------- Flutter web ----------
+      - name: Flutter pub get
+        working-directory: apps/mobile
+        run: flutter pub get
+
+      - name: Build web
+        working-directory: apps/mobile
+        run: flutter build web --release
+
+      # ---------- Cloud Functions ----------
+      - name: Install workspace deps
+        run: pnpm install --frozen-lockfile || pnpm install --no-frozen-lockfile
+
+      - name: Test functions
+        run: pnpm -F functions test
+
+      - name: Write functions .env (Paystack config)
+        working-directory: apps/functions
+        run: |
+          {
+            echo "PAYSTACK_PLAN_MONTHLY=${{ vars.PAYSTACK_PLAN_MONTHLY }}"
+            echo "PAYSTACK_PLAN_YEARLY=${{ vars.PAYSTACK_PLAN_YEARLY }}"
+            echo "PAYSTACK_LIFETIME_AMOUNT=${{ vars.PAYSTACK_LIFETIME_AMOUNT || '0' }}"
+            echo "PAYSTACK_CURRENCY=${{ vars.PAYSTACK_CURRENCY || 'NGN' }}"
+            echo "PAYSTACK_ALLOWED_ORIGINS=${{ vars.PAYSTACK_ALLOWED_ORIGINS || format('https://{0}.web.app,https://{0}.firebaseapp.com', env.FIREBASE_PROJECT_ID) }}"
+          } > .env
+          cat .env
+
+      # ---------- Deploy ----------
+      - name: Authenticate to Google Cloud
+        run: |
+          echo '${{ secrets.FIREBASE_SERVICE_ACCOUNT }}' > "$RUNNER_TEMP/sa.json"
+          echo "GOOGLE_APPLICATION_CREDENTIALS=$RUNNER_TEMP/sa.json" >> "$GITHUB_ENV"
+
+      - name: Deploy to Firebase
+        run: >
+          firebase deploy
+          --project "$FIREBASE_PROJECT_ID"
+          --only hosting,functions,firestore,storage
+          --non-interactive --force
+
+      - name: Live URL
+        run: echo "🚀 https://$FIREBASE_PROJECT_ID.web.app" >> "$GITHUB_STEP_SUMMARY"
