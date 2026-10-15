@@ -128,7 +128,7 @@ class _BackupScreenState extends ConsumerState<BackupScreen> {
       final json = const JsonEncoder.withIndent('  ').convert(payload);
       final now = DateTime.now();
       final filename =
-          'moneymind_export_${now.year}${now.month.toString().padLeft(2, '0')}${now.day.toString().padLeft(2, '0')}.json';
+          'homa_finance_export_${now.year}${now.month.toString().padLeft(2, '0')}${now.day.toString().padLeft(2, '0')}.json';
 
       if (kIsWeb) {
         // Web: hand over a real .json file. share_plus uses the browser's

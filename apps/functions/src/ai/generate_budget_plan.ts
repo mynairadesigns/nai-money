@@ -216,7 +216,7 @@ async function buildBudgetContext(
 
   const userData = userSnap?.data() ?? {};
   const currency =
-    input.currency ?? _str(userData.defaultCurrency, 'USD');
+    input.currency ?? _str(userData.defaultCurrency, 'NGN');
   const monthlyIncome =
     input.monthlyIncome ?? _num(userData.monthlyIncome, 0);
 

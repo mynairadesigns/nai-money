@@ -176,7 +176,7 @@ class _PaywallScreenState extends ConsumerState<PaywallScreen> {
                   ),
                   const SizedBox(height: AppSpacing.sm),
                   Text(
-                    'Check the Moneymind setup guide to wire up your RevenueCat API keys.',
+                    'Check the Homa Finance setup guide to wire up your RevenueCat API keys.',
                     style: theme.textTheme.bodyMedium?.copyWith(
                       color: theme.colorScheme.onSurfaceVariant,
                     ),
@@ -209,7 +209,7 @@ class _PaywallScreenState extends ConsumerState<PaywallScreen> {
         ),
         const SizedBox(height: AppSpacing.xs),
         Text(
-          'Unlock everything Moneymind can do.',
+          'Unlock everything Homa Finance can do.',
           textAlign: TextAlign.center,
           style: theme.textTheme.bodyMedium?.copyWith(
             color: theme.colorScheme.onSurfaceVariant,

@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 
 /// Currency picker options for the setup wizard (PRD §6.1 step 1).
 ///
-/// Top 20 by app-relevant usage. Order matters — defaults to USD at top.
+/// Order matters — the first entry (Naira) is the default. USD and the
+/// other majors stay available for multi-currency wallets.
 /// `name` is the localized display label (English only in v1 per CLAUDE.md
 /// §6); the picker shows `code · name` rows.
 class CurrencyOption {
@@ -13,9 +14,13 @@ class CurrencyOption {
 }
 
 const kCurrencyCatalog = <CurrencyOption>[
+  CurrencyOption('NGN', 'Nigerian Naira', '₦'),
   CurrencyOption('USD', 'US Dollar', '\$'),
-  CurrencyOption('EUR', 'Euro', '€'),
   CurrencyOption('GBP', 'British Pound', '£'),
+  CurrencyOption('EUR', 'Euro', '€'),
+  CurrencyOption('GHS', 'Ghanaian Cedi', 'GH₵'),
+  CurrencyOption('KES', 'Kenyan Shilling', 'KSh'),
+  CurrencyOption('XOF', 'West African CFA Franc', 'CFA'),
   CurrencyOption('JPY', 'Japanese Yen', '¥'),
   CurrencyOption('CNY', 'Chinese Yuan', '¥'),
   CurrencyOption('CHF', 'Swiss Franc', 'CHF'),

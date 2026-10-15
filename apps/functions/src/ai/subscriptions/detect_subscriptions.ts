@@ -71,7 +71,7 @@ export const detectSubscriptions = onCall(
       if (!normalizeNote(note)) continue;
       const amount = _num(t.amount, 0);
       if (amount <= 0) continue;
-      const currency = _str(t.currency, 'USD');
+      const currency = _str(t.currency, 'NGN');
 
       // Correctly parse the Firestore Timestamp date field.
       let date: Date;

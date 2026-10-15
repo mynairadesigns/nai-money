@@ -92,7 +92,7 @@ class _ReceiptScannerScreenState extends ConsumerState<ReceiptScannerScreen> {
     final wallets =
         ref.read(visibleWalletsProvider).value ?? const <Wallet>[];
     final defaultCurrency =
-        wallets.isNotEmpty ? wallets.first.currency : 'USD';
+        wallets.isNotEmpty ? wallets.first.currency : 'NGN';
 
     final expenseCategories = [
       for (final c in (ref.read(categoriesListProvider).value ??

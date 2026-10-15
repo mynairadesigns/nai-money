@@ -241,7 +241,7 @@ export async function buildCoachContext(uid: string): Promise<CoachContext> {
       }),
   ]);
 
-  const defaultCurrency = _str(userSnap?.data()?.defaultCurrency, 'USD');
+  const defaultCurrency = _str(userSnap?.data()?.defaultCurrency, 'NGN');
 
   // Category id → name map for transaction enrichment.
   const categoryNames = new Map<string, string>();

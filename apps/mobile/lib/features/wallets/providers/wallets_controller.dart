@@ -16,7 +16,7 @@ class WalletFormData {
     this.id,
     this.name = '',
     this.type = 'cash',
-    this.currency = 'USD',
+    this.currency = 'NGN',
     this.openingBalance = 0,
     this.iconName = 'payments',
     this.colorHex = '8a4f37',

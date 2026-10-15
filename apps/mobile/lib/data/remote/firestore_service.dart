@@ -27,7 +27,7 @@ class FirestoreService {
         'email': email,
         'displayName': displayName,
         'photoUrl': photoUrl,
-        'defaultCurrency': 'USD',
+        'defaultCurrency': 'NGN',
         'monthlyIncome': null,
         // premiumStatus / premiumExpiry are seeded server-side by the
         // `onUserCreate` trigger and are write-protected in firestore.rules.

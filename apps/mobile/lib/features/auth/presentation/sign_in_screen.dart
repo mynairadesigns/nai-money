@@ -67,7 +67,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                 Text('Welcome back', style: theme.textTheme.headlineLarge),
                 const SizedBox(height: AppSpacing.sm),
                 Text(
-                  'Sign in to continue to Moneymind.',
+                  'Sign in to continue to Homa Finance.',
                   style: theme.textTheme.bodyMedium?.copyWith(
                     color: theme.colorScheme.onSurfaceVariant,
                   ),

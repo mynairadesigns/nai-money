@@ -36,7 +36,7 @@ class _Body extends ConsumerWidget {
     // Currency: first visible wallet's currency, falling back to USD.
     // Mirrors the pattern used in receipt_scanner_screen.dart.
     final wallets = ref.watch(visibleWalletsProvider).value ?? const [];
-    final currency = wallets.isNotEmpty ? wallets.first.currency : 'USD';
+    final currency = wallets.isNotEmpty ? wallets.first.currency : 'NGN';
 
     return Card(
       clipBehavior: Clip.antiAlias,

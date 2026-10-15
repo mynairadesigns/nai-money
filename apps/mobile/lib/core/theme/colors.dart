@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-/// Material 3 [ColorScheme]s for Moneymind.
+/// Material 3 [ColorScheme]s for Homa Finance.
 ///
 /// Light scheme maps the `docs/DESIGN.md` `colors` block 1:1.
 /// Dark scheme is derived from the primary clay seed since DESIGN.md

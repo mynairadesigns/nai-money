@@ -5,7 +5,7 @@ import 'shapes.dart';
 import 'spacing.dart';
 import 'typography.dart';
 
-/// Aggregated [ThemeData] for Moneymind, light + dark.
+/// Aggregated [ThemeData] for Homa Finance, light + dark.
 ///
 /// All visual decisions come from `docs/DESIGN.md` via the theme tokens
 /// in `colors.dart`, `typography.dart`, `shapes.dart`, `spacing.dart`.

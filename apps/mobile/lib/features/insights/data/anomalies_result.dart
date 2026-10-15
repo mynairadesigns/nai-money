@@ -58,7 +58,7 @@ class AnomalyItem {
       transactionId: data['transactionId'] as String?,
       categoryName: data['categoryName'] as String? ?? '',
       amount: ((data['amount'] as num?) ?? 0).toDouble(),
-      currency: data['currency'] as String? ?? 'USD',
+      currency: data['currency'] as String? ?? 'NGN',
       summary: data['summary'] as String? ?? '',
       severity: _parseSeverity(data['severity'] as String?),
     );

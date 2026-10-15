@@ -54,7 +54,7 @@ export function buildWeeklyRecapPrompt(ctx: WeeklyRecapContext): {
   user: string;
 } {
   const system =
-    'You are Moneymind Recap. Generate a friendly weekly summary. ' +
+    'You are Homa Finance Recap. Generate a friendly weekly summary. ' +
     'Tone: encouraging, not preachy. ' +
     'Return ONLY a JSON object — no surrounding prose, no markdown fence.';
 

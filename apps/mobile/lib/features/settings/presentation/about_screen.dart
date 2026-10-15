@@ -85,7 +85,7 @@ class _AboutScreenState extends State<AboutScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Moneymind',
+                              'Homa Finance',
                               style: theme.textTheme.titleLarge,
                             ),
                             const SizedBox(height: AppSpacing.xs),
@@ -128,7 +128,7 @@ class _AboutScreenState extends State<AboutScreen> {
           Padding(
             padding: const EdgeInsets.only(bottom: AppSpacing.xl),
             child: Text(
-              'Made with Moneymind',
+              '© Homa Finance',
               style: theme.textTheme.bodySmall?.copyWith(
                 color: theme.colorScheme.onSurfaceVariant,
               ),

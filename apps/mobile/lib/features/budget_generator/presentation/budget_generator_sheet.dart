@@ -113,7 +113,7 @@ class _SuggestionList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final cur = currency ?? 'USD';
+    final cur = currency ?? 'NGN';
 
     if (plan.suggestions.isEmpty) {
       return Center(

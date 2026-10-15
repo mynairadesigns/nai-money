@@ -19,7 +19,7 @@ class DebtFormData {
     this.contactName = '',
     this.contactId,
     this.originalAmount = 0,
-    this.currency = 'USD',
+    this.currency = 'NGN',
     this.dueDate,
     this.notes,
   });

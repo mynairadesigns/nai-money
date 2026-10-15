@@ -15,7 +15,7 @@ class BudgetFormData {
     this.walletId,
     this.period = 'monthly',
     this.amount = 0,
-    this.currency = 'USD',
+    this.currency = 'NGN',
     this.rollover = false,
     this.thresholdPercent = kDefaultBudgetThresholdPercent,
     DateTime? startDate,

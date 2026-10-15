@@ -13,7 +13,7 @@ class GoalFormData {
     this.id,
     this.name = '',
     this.targetAmount = 0,
-    this.currency = 'USD',
+    this.currency = 'NGN',
     this.deadline,
     this.walletId,
     String? iconName,

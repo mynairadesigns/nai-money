@@ -72,7 +72,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
           children: [
             const BrandLogo(size: 96),
             const SizedBox(height: AppSpacing.lg),
-            Text('Moneymind', style: theme.textTheme.headlineLarge),
+            Text('Homa Finance', style: theme.textTheme.headlineLarge),
           ],
         ),
       ),

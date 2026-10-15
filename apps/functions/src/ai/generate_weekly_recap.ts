@@ -199,7 +199,7 @@ async function buildRecapContext(
       }),
   ]);
 
-  const currency = _str(userSnap?.data()?.defaultCurrency, 'USD');
+  const currency = _str(userSnap?.data()?.defaultCurrency, 'NGN');
 
   const categoryNames = new Map<string, string>();
   categoriesSnap?.forEach((d) => {

@@ -35,7 +35,7 @@ class _BudgetGeneratorScreenState
 
   String _currency() {
     final wallets = ref.read(visibleWalletsProvider).value ?? const [];
-    return wallets.isNotEmpty ? wallets.first.currency : 'USD';
+    return wallets.isNotEmpty ? wallets.first.currency : 'NGN';
   }
 
   Set<String> _alreadyBudgetedCategoryIds() {

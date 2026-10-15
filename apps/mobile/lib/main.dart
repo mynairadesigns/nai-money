@@ -85,7 +85,7 @@ class MoneymindApp extends ConsumerWidget {
     }
 
     return MaterialApp.router(
-      title: 'Moneymind',
+      title: 'Homa Finance',
       scaffoldMessengerKey: _scaffoldMessengerKey,
       debugShowCheckedModeBanner: false,
       theme: AppTheme.light(),

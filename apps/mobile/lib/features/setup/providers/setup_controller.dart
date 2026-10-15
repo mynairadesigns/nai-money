@@ -13,7 +13,7 @@ import '../data/setup_catalog.dart';
 /// scratch.
 class SetupFormState {
   SetupFormState({
-    this.currency = 'USD',
+    this.currency = 'NGN',
     this.monthlyIncome,
     Set<String>? selectedCategoryKeys,
   }) : selectedCategoryKeys = selectedCategoryKeys ?? <String>{};

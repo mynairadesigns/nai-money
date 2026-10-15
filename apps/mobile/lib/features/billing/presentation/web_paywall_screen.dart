@@ -116,7 +116,7 @@ class _WebPaywallScreenState extends ConsumerState<WebPaywallScreen> {
                 ),
                 const SizedBox(height: AppSpacing.xs),
                 Text(
-                  'Unlock everything Moneymind can do.',
+                  'Unlock everything Homa Finance can do.',
                   textAlign: TextAlign.center,
                   style: theme.textTheme.bodyMedium
                       ?.copyWith(color: theme.colorScheme.onSurfaceVariant),

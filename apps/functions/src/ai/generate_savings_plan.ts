@@ -187,7 +187,7 @@ async function buildSavingsContext(
   const goal = goalSnap.data() ?? {};
 
   const currency =
-    _str(goal.currency, _str(userSnap?.data()?.defaultCurrency, 'USD'));
+    _str(goal.currency, _str(userSnap?.data()?.defaultCurrency, 'NGN'));
 
   const target = _num(goal.targetAmount, _num(goal.target, 0));
   const current = _num(goal.currentAmount, _num(goal.current, 0));

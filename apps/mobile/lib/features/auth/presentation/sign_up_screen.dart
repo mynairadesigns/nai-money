@@ -78,7 +78,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
               Text('Create account', style: theme.textTheme.headlineLarge),
               const SizedBox(height: AppSpacing.sm),
               Text(
-                'Start tracking your finances with Moneymind.',
+                'Start tracking your finances with Homa Finance.',
                 style: theme.textTheme.bodyMedium?.copyWith(
                   color: theme.colorScheme.onSurfaceVariant,
                 ),

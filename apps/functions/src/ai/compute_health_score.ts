@@ -188,7 +188,7 @@ async function buildHealthScoreContext(
   ]);
 
   const userData = userSnap?.data() ?? {};
-  const currency = _str(userData.defaultCurrency, 'USD');
+  const currency = _str(userData.defaultCurrency, 'NGN');
 
   // 30-day income vs expense.
   let monthlyIncome = 0;

@@ -56,7 +56,7 @@ class _LockScreenState extends ConsumerState<LockScreen>
     if (!settings.biometricEnabled) return;
     final service = ref.read(securityServiceProvider);
     final ok = await service.authenticateBiometric(
-      'Authenticate to unlock Moneymind',
+      'Authenticate to unlock Homa Finance',
     );
     if (ok && mounted) {
       ref.read(appLockProvider.notifier).unlock();

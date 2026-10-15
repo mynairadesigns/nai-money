@@ -28,12 +28,12 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
     _OnboardingPage(
       icon: Icons.auto_awesome_outlined,
       title: 'AI does the heavy lifting',
-      body: 'Scan receipts and chat with Moneymind Coach about your money.',
+      body: 'Scan receipts and chat with Homa Coach about your money.',
     ),
     _OnboardingPage(
       icon: Icons.flag_outlined,
       title: 'Reach your goals faster',
-      body: 'Set goals and let Moneymind build a personalized savings plan.',
+      body: 'Set goals and let Homa Finance build a personalized savings plan.',
     ),
   ];
 

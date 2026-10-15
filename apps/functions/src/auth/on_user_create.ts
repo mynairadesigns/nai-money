@@ -27,7 +27,7 @@ export const onUserCreate = functions
       email: user.email ?? '',
       displayName: user.displayName ?? null,
       photoUrl: user.photoURL ?? null,
-      defaultCurrency: 'USD',
+      defaultCurrency: 'NGN',
       monthlyIncome: null,
       premiumStatus: 'free',
       premiumExpiry: null,

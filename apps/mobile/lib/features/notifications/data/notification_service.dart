@@ -5,7 +5,7 @@ import 'package:timezone/timezone.dart' as tz;
 
 /// Android notification channel used for all local notifications.
 const _kChannelId = 'moneymind_alerts';
-const _kChannelName = 'Moneymind Alerts';
+const _kChannelName = 'Homa Finance Alerts';
 const _kChannelDesc = 'Budget, bill, debt, and goal reminders';
 
 /// Wraps [FlutterLocalNotificationsPlugin] with a clean API for the rest of

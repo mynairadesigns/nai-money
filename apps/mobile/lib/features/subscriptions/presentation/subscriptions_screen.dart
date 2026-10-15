@@ -44,7 +44,7 @@ class SubscriptionsScreen extends ConsumerWidget {
               child: Padding(
                 padding: const EdgeInsets.all(AppSpacing.xl),
                 child: Text(
-                  "Nothing detected — keep using Moneymind for a few weeks "
+                  "Nothing detected — keep using Homa Finance for a few weeks "
                   "and we'll spot recurring patterns.",
                   textAlign: TextAlign.center,
                   style: theme.textTheme.bodyMedium?.copyWith(
