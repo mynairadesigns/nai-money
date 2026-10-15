@@ -36,7 +36,7 @@ Future<void> initRemoteConfig() async {
       // Free-tier ceilings (PRD §6.14.1).
       'free_tier_wallets_max': 1,
       'free_tier_transactions_monthly': 100,
-      'free_tier_ai_quota': 5,
+      'free_tier_ai_quota': 10,
       // Ads (empty ids + disabled by default; buyer opts in via console).
       'ads_enabled': false,
       'admob_banner_id_ios': '',

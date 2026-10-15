@@ -13,7 +13,7 @@ if (!admin.apps.length) admin.initializeApp();
  *
  * - Doc: `users/{uid}/aiUsage/{YYYY-MM}`.
  * - Field: [opts.field] (e.g. `categorize`, `scan`, `fx`).
- * - Limit: read from Remote Config `free_tier_ai_quota` (default 5).
+ * - Limit: read from Remote Config `free_tier_ai_quota` (default 10).
  *
  * Premium bypass (P6): users whose `users/{uid}.premiumStatus == 'premium'`
  * and whose `premiumExpiry` is in the future skip the ceiling entirely. Their
@@ -31,11 +31,11 @@ if (!admin.apps.length) admin.initializeApp();
 export async function checkAndIncrementQuota(opts: {
   uid: string;
   field: string;
-  /** Optional override; defaults to RC `free_tier_ai_quota` (else 5). */
+  /** Optional override; defaults to RC `free_tier_ai_quota` (else 10). */
   limitOverride?: number;
 }): Promise<{ refund: () => Promise<void> }> {
   const { uid, field } = opts;
-  const limit = opts.limitOverride ?? (await getRcNumber('free_tier_ai_quota', 5));
+  const limit = opts.limitOverride ?? (await getRcNumber('free_tier_ai_quota', 10));
   const yearMonth = _yearMonth(new Date());
   const ref = admin.firestore().doc(`users/${uid}/aiUsage/${yearMonth}`);
   const userRef = admin.firestore().doc(`users/${uid}`);
