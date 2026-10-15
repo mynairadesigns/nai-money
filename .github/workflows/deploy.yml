@@ -18,7 +18,7 @@ concurrency:
   cancel-in-progress: false
 
 env:
-  FIREBASE_PROJECT_ID: __FIREBASE_PROJECT_ID__
+  FIREBASE_PROJECT_ID: nai-money
 
 jobs:
   deploy:
