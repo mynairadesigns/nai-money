@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart' show Timestamp;
 import 'package:flutter_test/flutter_test.dart';
-import 'package:moneymind/data/sync/sync_mappers.dart';
+import 'package:homa_finance/data/sync/sync_mappers.dart';
 
 import '../helpers/test_harness.dart';
 

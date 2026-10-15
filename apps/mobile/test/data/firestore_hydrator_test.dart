@@ -2,8 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:drift/drift.dart' show Value;
 import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:moneymind/data/local/app_database.dart';
-import 'package:moneymind/data/sync/firestore_hydrator.dart';
+import 'package:homa_finance/data/local/app_database.dart';
+import 'package:homa_finance/data/sync/firestore_hydrator.dart';
 
 import '../helpers/test_harness.dart';
 

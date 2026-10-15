@@ -1,5 +1,5 @@
 /**
- * Deployment region for all Moneymind Cloud Functions.
+ * Deployment region for all Homa Finance Cloud Functions.
  *
  * Pinned to `europe-west1` (Belgium): the closest Tier-1 region to Nigeria,
  * since West African subsea cables land in Europe. (The seller's default was

@@ -22,7 +22,7 @@ final paystackPricesProvider =
 enum PaystackReturnStatus { idle, verifying, success, pending, failed }
 
 /// Verifies a pending Paystack checkout once the user is signed in again
-/// after the redirect back from Paystack. Watched from `MoneymindApp` on
+/// after the redirect back from Paystack. Watched from `HomaFinanceApp` on
 /// web only; the app shows a snackbar when the status changes.
 ///
 /// Belt-and-braces: the `handlePaystackWebhook` function normally grants

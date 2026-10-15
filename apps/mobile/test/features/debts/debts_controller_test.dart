@@ -1,10 +1,10 @@
 import 'package:drift/drift.dart' show Value;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:moneymind/core/providers/firestore_provider.dart';
-import 'package:moneymind/data/local/app_database.dart';
-import 'package:moneymind/features/debts/data/debt_status.dart';
-import 'package:moneymind/features/debts/providers/debts_controller.dart';
+import 'package:homa_finance/core/providers/firestore_provider.dart';
+import 'package:homa_finance/data/local/app_database.dart';
+import 'package:homa_finance/features/debts/data/debt_status.dart';
+import 'package:homa_finance/features/debts/providers/debts_controller.dart';
 
 import '../../helpers/test_harness.dart';
 

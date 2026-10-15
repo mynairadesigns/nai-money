@@ -18,7 +18,7 @@ import { quotaCountedTotal } from './user-mapping';
  *
  * COST: this reads every aiUsage document, so it scales linearly with user
  * count — bounded only by `resetMonthlyAIQuotas` keeping just the current and
- * previous month. That is acceptable for an ops console at Moneymind's scale
+ * previous month. That is acceptable for an ops console at Homa Finance's scale
  * and is exactly what the Phase 3 `adminStatsMonthly` rollup is for: once that
  * scheduler exists, these reads become a two-document lookup and the module's
  * pure summarisers can be pointed at the rollup unchanged.

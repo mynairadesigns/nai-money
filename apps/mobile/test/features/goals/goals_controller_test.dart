@@ -3,10 +3,10 @@ import 'dart:async';
 import 'package:drift/drift.dart' show Value;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:moneymind/data/local/app_database.dart';
-import 'package:moneymind/features/goals/providers/goal_progress_provider.dart';
-import 'package:moneymind/features/goals/providers/goals_controller.dart';
-import 'package:moneymind/features/goals/providers/goals_list_provider.dart';
+import 'package:homa_finance/data/local/app_database.dart';
+import 'package:homa_finance/features/goals/providers/goal_progress_provider.dart';
+import 'package:homa_finance/features/goals/providers/goals_controller.dart';
+import 'package:homa_finance/features/goals/providers/goals_list_provider.dart';
 
 import '../../helpers/test_harness.dart';
 

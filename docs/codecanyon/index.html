@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Moneymind — Documentation</title>
+<title>Homa Finance — Documentation</title>
 <style>
   :root{
     --brand:#8a4f37; --brand-dark:#582712; --brand-soft:#b0694a;
@@ -71,7 +71,7 @@
 </head>
 <body>
 <header>
-  <h1>Moneymind</h1>
+  <h1>Homa Finance</h1>
   <p>AI-Powered Personal Finance App — Flutter + Firebase</p>
   <div class="v">Documentation · v1.0.0</div>
 </header>
@@ -100,7 +100,7 @@
 
 <section id="overview">
   <h2>1 · Overview</h2>
-  <p><strong>Moneymind</strong> is an AI-powered personal finance app shipped as
+  <p><strong>Homa Finance</strong> is an AI-powered personal finance app shipped as
   production-grade source code: one <strong>Flutter</strong> mobile app
   (<code>apps/mobile</code>) plus a <strong>Firebase Cloud Functions</strong>
   backend (<code>apps/functions</code>). It is <strong>single-user personal
@@ -266,7 +266,7 @@
   secrets, Remote Config, monetization, and release in order. Monetization
   specifics also live in
   <a href="../REVENUECAT_SETUP.md"><code>docs/REVENUECAT_SETUP.md</code></a>.</p>
-  <div class="note"><strong>Heads up:</strong> Moneymind ships <em>without</em> the
+  <div class="note"><strong>Heads up:</strong> Homa Finance ships <em>without</em> the
   seller's Firebase config. You must run <code>flutterfire configure</code> against
   your own Firebase project before the app will build (see §6).</div>
 </section>
@@ -281,7 +281,7 @@
       (Email/Password + Google/Apple — see §7), <strong>Firestore</strong>,
       <strong>Storage</strong>, <strong>Remote Config</strong>, and
       <strong>Functions</strong> (requires the <strong>Blaze</strong> plan).</li>
-    <li>Register an Android app (<code>com.devsnack.moneymind</code> or your own id)
+    <li>Register an Android app (<code>finance.homa.app</code> or your own id)
       and an iOS app, then from <code>apps/mobile</code> run:
       <pre><code class="bash">dart pub global activate flutterfire_cli
 flutterfire configure</code></pre>
@@ -401,7 +401,7 @@ firebase deploy --only functions</code></pre>
 
 <section id="ai">
   <h2>10 · AI provider setup</h2>
-  <p>Moneymind supports OpenAI and Gemini behind one interface. Set whichever
+  <p>Homa Finance supports OpenAI and Gemini behind one interface. Set whichever
   key(s) you have:</p>
   <pre><code class="bash">firebase functions:secrets:set OPENAI_API_KEY
 firebase functions:secrets:set GEMINI_API_KEY</code></pre>
@@ -478,7 +478,7 @@ firebase functions:secrets:set GEMINI_API_KEY</code></pre>
 
   <h3>How access works</h3>
   <p>Access is a Firebase Auth <strong>custom claim</strong> (<code>admin: true</code>) —
-  not a password and not an email list. An ordinary Moneymind user has a valid
+  not a password and not an email list. An ordinary Homa Finance user has a valid
   Firebase account and still cannot get in. Email/password is the only sign-in
   method, and there is deliberately no sign-up screen, so the first admin is
   created from a terminal.</p>
@@ -550,7 +550,7 @@ pnpm -F admin grant-admin you@example.com --create</code></pre>
 
   <p><strong>Any container host</strong> also works: <code>output:
   'standalone'</code> is enabled everywhere except Vercel, so
-  <code>gcloud run deploy moneymind-admin --source .</code> from the repo root
+  <code>gcloud run deploy homa-admin --source .</code> from the repo root
   builds and runs it, as does <code>apps/admin/Dockerfile</code>. On a Google
   runtime the runtime service account supplies credentials — grant it
   <code>roles/datastore.user</code>, <code>roles/firebaseauth.admin</code>, and
@@ -580,7 +580,7 @@ pnpm -F admin grant-admin you@example.com --create</code></pre>
   <code>android/app/src/main/AndroidManifest.xml</code>
   (<code>android:label</code>), and
   <code>ios/Runner/Info.plist</code> (<code>CFBundleDisplayName</code>) + the
-  Xcode bundle id. Default id: <code>com.devsnack.moneymind</code>.</p>
+  Xcode bundle id. Default id: <code>finance.homa.app</code>.</p>
   <h3>Theme</h3>
   <p>All colors, type, shape, and spacing live in
   <code>apps/mobile/lib/core/theme/</code>. Edit <code>colors.dart</code> once
@@ -659,7 +659,7 @@ storeFile=/absolute/path/to/upload-keystore.jks</code></pre>
   <ol>
     <li>Join the <strong>Apple Developer Program</strong> and create the app
       record in <strong>App Store Connect</strong> with your bundle id
-      (<code>com.devsnack.moneymind</code> or your own).</li>
+      (<code>finance.homa.app</code> or your own).</li>
     <li>In Xcode → <code>Runner</code> → <strong>Signing &amp; Capabilities</strong>:
       select your <strong>Team</strong>, set the bundle id, and leave
       <strong>Automatically manage signing</strong> enabled (Xcode creates the
@@ -701,7 +701,7 @@ storeFile=/absolute/path/to/upload-keystore.jks</code></pre>
   </ol>
   <div class="note"><strong>Packaging tip:</strong> build the distributable zip
   from tracked files only so your real Firebase config (which stays on your disk)
-  never leaks: <code>git archive --format=zip -o moneymind-1.0.0.zip HEAD</code>.</div>
+  never leaks: <code>git archive --format=zip -o homa-finance-1.0.0.zip HEAD</code>.</div>
 </section>
 
 <section id="changelog">
@@ -734,7 +734,7 @@ storeFile=/absolute/path/to/upload-keystore.jks</code></pre>
 </div>
 
 <footer>
-  Moneymind v1.0.0 · © <span id="y"></span> · devsnack26@gmail.com · WhatsApp +855 96 741 3911
+  Homa Finance v1.0.0 · © <span id="y"></span> · devsnack26@gmail.com · WhatsApp +855 96 741 3911
   <script>document.getElementById('y').textContent=new Date().getFullYear();</script>
 </footer>
 </body>

@@ -16,8 +16,8 @@ const sora = Sora({
 });
 
 export const metadata: Metadata = {
-  title: 'Moneymind Admin',
-  description: 'Operations console for a Moneymind deployment.',
+  title: 'Homa Finance Admin',
+  description: 'Operations console for a Homa Finance deployment.',
   robots: { index: false, follow: false },
 };
 

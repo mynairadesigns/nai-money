@@ -1,6 +1,6 @@
-# RevenueCat Setup — Moneymind
+# RevenueCat Setup — Homa Finance
 
-How to wire up subscriptions for your Moneymind deployment. RevenueCat is the
+How to wire up subscriptions for your Homa Finance deployment. RevenueCat is the
 subscription source of truth; the app and a Firebase webhook both mirror
 entitlement state into Firestore (`users/{uid}.premiumStatus` + `premiumExpiry`),
 which is what the server-side AI quota bypass reads.
@@ -52,7 +52,7 @@ The full premium path works end-to-end for testing:
 So you can exercise the paywall, the upgrade flow, ad removal, and the AI bypass
 without any real store.
 
-### How to wire it into Moneymind
+### How to wire it into Homa Finance
 
 1. In RevenueCat, set up the **Test Store products**, attach them to an
    entitlement named exactly **`premium`** ⚠️, and add them to your **current
@@ -123,9 +123,9 @@ Products live in the app stores — RevenueCat only reads them. Create them
 
 | Product ID | Type | Price |
 | --- | --- | --- |
-| `moneymind_premium_monthly` | Auto-renewing subscription | $4.99 / month |
-| `moneymind_premium_yearly` | Auto-renewing subscription | $29.99 / year |
-| `moneymind_premium_lifetime` | Non-consumable | $79.99 one-time |
+| `homa_premium_monthly` | Auto-renewing subscription | $4.99 / month |
+| `homa_premium_yearly` | Auto-renewing subscription | $29.99 / year |
+| `homa_premium_lifetime` | Non-consumable | $79.99 one-time |
 
 **Google Play Console** → the equivalent subscriptions + one-time product (the
 same IDs are fine).

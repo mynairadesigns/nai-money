@@ -2,7 +2,7 @@
 
 > **TL;DR** — Install deps, point `apps/admin/.env.local` at your Firebase project, enable Email/Password sign-in, run `pnpm -F admin grant-admin you@example.com --create` to create your admin account and give it the `admin` custom claim, then `deploy it on Vercel with Root Directory `apps/admin`. Requires the Blaze plan (which Cloud Functions already need).
 
-The admin panel (`apps/admin`) is a Next.js operations console for your Moneymind deployment. It shows user counts and growth, what your AI features are costing, whether RevenueCat is reaching you, and why a given user is hitting a limit — and it gives you a validated editor for the Remote Config keys that configure the mobile app.
+The admin panel (`apps/admin`) is a Next.js operations console for your Homa Finance deployment. It shows user counts and growth, what your AI features are costing, whether RevenueCat is reaching you, and why a given user is hitting a limit — and it gives you a validated editor for the Remote Config keys that configure the mobile app.
 
 It is optional. The mobile app works without it.
 
@@ -14,7 +14,7 @@ Access is gated on a Firebase Auth **custom claim**, `admin: true` — not on a 
 
 This matters for two reasons:
 
-- **An ordinary Moneymind user cannot get in.** They have a valid Firebase account; they do not have the claim. Signing in successfully is not the same as being authorized.
+- **An ordinary Homa Finance user cannot get in.** They have a valid Firebase account; they do not have the claim. Signing in successfully is not the same as being authorized.
 - **You do not need to change your security rules.** The panel reads everything server-side through the Firebase Admin SDK, which bypasses Firestore rules entirely. Your `firestore.rules` stays strictly owner-scoped (`request.auth.uid == userId`) exactly as it ships. Nothing about running the panel widens what a mobile client can reach.
 
 The panel never puts a Firestore handle in the browser. The browser's only job is to sign you in and hand the resulting ID token to the server, which verifies it, checks the claim, and issues an httpOnly session cookie.
@@ -175,7 +175,7 @@ Push to your default branch and Vercel builds automatically. Every pull request 
 The app also builds to a standalone Node server (`output: 'standalone'`, enabled everywhere except Vercel), so any container host works. From the repository root:
 
 ```bash
-gcloud run deploy moneymind-admin --source . --region europe-west1
+gcloud run deploy homa-admin --source . --region europe-west1
 ```
 
 or build `apps/admin/Dockerfile` yourself. On a Google runtime the runtime service account supplies credentials automatically, so `FIREBASE_SERVICE_ACCOUNT_JSON` is not needed — grant that account `roles/datastore.user`, `roles/firebaseauth.admin`, and `roles/firebaseremoteconfig.admin` instead. **Never bake a service-account key into an image.**

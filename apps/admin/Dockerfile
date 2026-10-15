@@ -1,12 +1,12 @@
-# Fallback deploy path for the Moneymind admin panel (Cloud Run, or any
+# Fallback deploy path for the Homa Finance admin panel (Cloud Run, or any
 # container host). Firebase App Hosting is the primary target and needs none of
 # this — see apphosting.yaml and docs/ADMIN_SETUP.md.
 #
 # Build from the REPO ROOT so the pnpm workspace resolves:
-#   docker build -f apps/admin/Dockerfile -t moneymind-admin .
+#   docker build -f apps/admin/Dockerfile -t homa-admin .
 #
 # Or let Cloud Run build it for you, from the repo root:
-#   gcloud run deploy moneymind-admin --source . --region europe-west1
+#   gcloud run deploy homa-admin --source . --region europe-west1
 #
 # Credentials come from the runtime service account (Application Default
 # Credentials). Never bake a service-account key into this image.

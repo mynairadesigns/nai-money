@@ -9,7 +9,7 @@
       "client_info": {
         "mobilesdk_app_id": "YOUR_ANDROID_APP_ID",
         "android_client_info": {
-          "package_name": "com.devsnack.moneymind"
+          "package_name": "finance.homa.app"
         }
       },
       "oauth_client": [],

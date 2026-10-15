@@ -11,6 +11,6 @@
     "functions:build": "pnpm -F functions build",
     "functions:test": "pnpm -F functions test",
     "check:package": "node scripts/check-package.mjs",
-    "package": "node scripts/check-package.mjs && git archive --format=zip -o moneymind-1.0.0.zip HEAD && echo \"\\n  Built moneymind-1.0.0.zip\\n\""
+    "package": "node scripts/check-package.mjs && git archive --format=zip -o homa-finance-1.0.0.zip HEAD && echo \"\\n  Built homa-finance-1.0.0.zip\\n\""
   }
 }

@@ -1,6 +1,6 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:moneymind/features/security/data/security_service.dart';
+import 'package:homa_finance/features/security/data/security_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 /// `SecurityService` stores the PIN as a salted SHA-256 hash in secure

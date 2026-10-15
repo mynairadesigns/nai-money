@@ -1,6 +1,6 @@
 import 'package:drift/drift.dart' show Value;
 import 'package:flutter_test/flutter_test.dart';
-import 'package:moneymind/data/local/app_database.dart';
+import 'package:homa_finance/data/local/app_database.dart';
 
 import '../helpers/test_harness.dart';
 

@@ -17,7 +17,7 @@ import { ADMIN_CLAIM, SESSION_COOKIE, type AdminIdentity } from './session';
  *   1. the session cookie verifies (and has not been revoked), and
  *   2. the decoded token carries `admin: true`.
  *
- * A signed-in Moneymind *end user* has a perfectly valid Firebase session and
+ * A signed-in Homa Finance *end user* has a perfectly valid Firebase session and
  * no admin claim — step 2 is what keeps them out.
  */
 export async function verifyAdminSession(): Promise<AdminIdentity | null> {

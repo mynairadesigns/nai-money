@@ -28,7 +28,7 @@ final firestoreSyncServiceProvider = Provider<FirestoreSyncService>((ref) {
 });
 
 /// Top-level side-effect provider that ties the sync engine to the auth
-/// lifecycle. `ref.watch` this once at the app root (MoneymindApp.build)
+/// lifecycle. `ref.watch` this once at the app root (HomaFinanceApp.build)
 /// so it stays alive for the session.
 ///
 /// On every auth-state change:

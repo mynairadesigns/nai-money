@@ -1,4 +1,4 @@
-# Moneymind
+# Homa Finance
 
 AI-powered personal finance app (Flutter + Firebase). The backend lives in
 `../functions` (Firebase Cloud Functions); product/visual specs are in
@@ -77,7 +77,7 @@ The Firebase config files are untracked but still sit on your disk, so a plain
 
 ```bash
 # from the repo root
-git archive --format=zip -o moneymind-1.0.0.zip HEAD
+git archive --format=zip -o homa-finance-1.0.0.zip HEAD
 ```
 
 ## Verification

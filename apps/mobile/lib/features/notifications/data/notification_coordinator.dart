@@ -69,7 +69,7 @@ String _recurringLabel(String templateJson) {
 /// ref.watch(notificationCoordinatorProvider);
 /// ```
 ///
-/// once at the app root (e.g. `MoneymindApp.build`) to keep it alive.
+/// once at the app root (e.g. `HomaFinanceApp.build`) to keep it alive.
 ///
 /// Subscribes to:
 /// - [allActiveBudgetProgressProvider] — budget 50/80/100/over alerts

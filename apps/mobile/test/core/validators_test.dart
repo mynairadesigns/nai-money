@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:moneymind/core/utils/validators.dart';
+import 'package:homa_finance/core/utils/validators.dart';
 
 /// Shared form validators. The regressions these lock down: an amount
 /// field that fell through `tryParse(...) ?? 0` and silently saved a

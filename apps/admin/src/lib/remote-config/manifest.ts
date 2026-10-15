@@ -431,7 +431,7 @@ export const RC_MANIFEST: readonly RcKeyDef[] = [
     description: 'Documented as the support contact. Nothing reads it.',
     readBy: 'none',
     readSites: [],
-    note: 'No read site. about_screen.dart hardcodes mailto:support@moneymind.app. A buyer rebranding the app must edit that file — setting this key does nothing.',
+    note: 'No read site. about_screen.dart hardcodes mailto:support@homa.finance. A buyer rebranding the app must edit that file — setting this key does nothing.',
     validate: emailAddress,
   },
   {
@@ -441,7 +441,7 @@ export const RC_MANIFEST: readonly RcKeyDef[] = [
     description: 'Documented as the privacy policy link. Nothing reads it.',
     readBy: 'none',
     readSites: [],
-    note: 'No read site. about_screen.dart:116 hardcodes https://moneymind.app/privacy. Store review will reject an app pointing at the template author\'s policy, so this one is worth fixing in code.',
+    note: 'No read site. about_screen.dart:116 hardcodes https://homa.finance/privacy. Store review will reject an app pointing at the template author\'s policy, so this one is worth fixing in code.',
     validate: httpUrl,
   },
   {
@@ -451,7 +451,7 @@ export const RC_MANIFEST: readonly RcKeyDef[] = [
     description: 'Documented as the terms of service link. Nothing reads it.',
     readBy: 'none',
     readSites: [],
-    note: 'No read site. about_screen.dart hardcodes https://moneymind.app/terms. Same store-review caveat as privacy_policy_url.',
+    note: 'No read site. about_screen.dart hardcodes https://homa.finance/terms. Same store-review caveat as privacy_policy_url.',
     validate: httpUrl,
   },
 ];

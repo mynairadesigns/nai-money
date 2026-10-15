@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Grants (or revokes) admin access to the Moneymind admin panel.
+ * Grants (or revokes) admin access to the Homa Finance admin panel.
  *
  * This exists to solve a chicken-and-egg problem: access is gated on a Firebase
  * custom claim, and you cannot grant yourself that claim from a panel you

@@ -42,7 +42,7 @@ export default async function DashboardLayout({
       <header className="border-b border-outline/10 bg-surface-container-low">
         <div className="mx-auto flex max-w-page flex-wrap items-center gap-4 px-4 py-4 md:px-10">
           <Link href="/" className="text-label-md uppercase text-primary">
-            Moneymind admin
+            Homa Finance admin
           </Link>
 
           <nav className="flex flex-1 flex-wrap items-center gap-1">

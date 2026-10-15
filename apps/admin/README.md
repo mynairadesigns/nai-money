@@ -1,12 +1,12 @@
-# Moneymind Admin
+# Homa Finance Admin
 
-A Next.js operations console for a Moneymind deployment: see who signed up, what your AI features are costing, whether RevenueCat is reaching you, and why a particular user is hitting a limit — plus a validated editor for the Remote Config keys that configure the mobile app.
+A Next.js operations console for a Homa Finance deployment: see who signed up, what your AI features are costing, whether RevenueCat is reaching you, and why a particular user is hitting a limit — plus a validated editor for the Remote Config keys that configure the mobile app.
 
 It talks to the **same Firebase project** as the mobile app (`../mobile`) and its Cloud Functions (`../functions`). Full setup walkthrough: [`../../docs/ADMIN_SETUP.md`](../../docs/ADMIN_SETUP.md).
 
 ## How access works
 
-> **Signing in is not enough.** The panel is gated on a Firebase Auth custom claim, `admin: true`. An ordinary Moneymind user has a perfectly valid Firebase account and cannot get in. You grant the first admin from a terminal (step 4 below); after that you can grant others from inside the panel.
+> **Signing in is not enough.** The panel is gated on a Firebase Auth custom claim, `admin: true`. An ordinary Homa Finance user has a perfectly valid Firebase account and cannot get in. You grant the first admin from a terminal (step 4 below); after that you can grant others from inside the panel.
 
 All data is read **server-side** through the Firebase Admin SDK. The browser never gets a Firestore handle, so `firestore.rules` stays strictly owner-scoped — you do **not** need to loosen your security rules to run this.
 
@@ -83,7 +83,7 @@ Firebase App Hosting is **not** usable here: its buildpack demands a lock file i
 
 ```bash
 # from the repo root
-gcloud run deploy moneymind-admin --source . --region europe-west1
+gcloud run deploy homa-admin --source . --region europe-west1
 ```
 
 or build `apps/admin/Dockerfile`. On a Google runtime the runtime service account supplies credentials, so no key file is needed — **never bake one into an image.**
@@ -100,7 +100,7 @@ pnpm -F admin build
 To exercise the sign-in gate locally, start the Auth emulator and set `NEXT_PUBLIC_USE_FIREBASE_EMULATORS=true` in `.env.local`:
 
 ```bash
-firebase emulators:start --only auth --project demo-moneymind
+firebase emulators:start --only auth --project demo-homa-finance
 ```
 
 (The Firestore emulator needs JDK 21 or newer; the Auth emulator does not.)

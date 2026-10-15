@@ -1,6 +1,6 @@
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:moneymind/data/remote/fx_service.dart';
+import 'package:homa_finance/data/remote/fx_service.dart';
 
 /// `FxService` wraps the region-pinned `getFxRate` Firebase callable and keeps
 /// an in-memory `"<FROM>-<TO>"` cache so the Add Transaction sheet doesn't

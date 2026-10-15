@@ -44,15 +44,15 @@ Future<void> main() async {
   runApp(
     ProviderScope(
       overrides: [sharedPreferencesProvider.overrideWithValue(prefs)],
-      child: const MoneymindApp(),
+      child: const HomaFinanceApp(),
     ),
   );
 }
 
 final _scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
 
-class MoneymindApp extends ConsumerWidget {
-  const MoneymindApp({super.key});
+class HomaFinanceApp extends ConsumerWidget {
+  const HomaFinanceApp({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

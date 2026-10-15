@@ -77,7 +77,7 @@ export function adminAuth(): Auth {
  * throws "Firestore has already been initialized". A cross-realm symbol on
  * globalThis is shared by every copy, so the call happens exactly once.
  */
-const CONFIGURED = Symbol.for('moneymind.admin.firestoreConfigured');
+const CONFIGURED = Symbol.for('homafinance.admin.firestoreConfigured');
 
 export function adminDb(): Firestore {
   if (!_firestore) {

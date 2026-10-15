@@ -1,7 +1,7 @@
 {
   "name": "admin",
   "private": true,
-  "description": "Moneymind admin panel — Next.js ops console (users, AI usage, Remote Config, billing).",
+  "description": "Homa Finance admin panel — Next.js ops console (users, AI usage, Remote Config, billing).",
   "engines": {
     "node": "22"
   },

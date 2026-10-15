@@ -420,7 +420,7 @@ async function applySuccessfulCharge(
     planCodes: planCodes(),
   });
   if (!plan) {
-    console.warn(`Paystack: charge ${reference} does not match a Moneymind plan`);
+    console.warn(`Paystack: charge ${reference} does not match a Homa Finance plan`);
     return { isPremium: false, expiryMs: null };
   }
   if (plan === 'lifetime') {

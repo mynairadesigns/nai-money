@@ -4,7 +4,7 @@ import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
 /// Android notification channel used for all local notifications.
-const _kChannelId = 'moneymind_alerts';
+const _kChannelId = 'homa_alerts';
 const _kChannelName = 'Homa Finance Alerts';
 const _kChannelDesc = 'Budget, bill, debt, and goal reminders';
 

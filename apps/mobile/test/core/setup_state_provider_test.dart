@@ -3,9 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:moneymind/core/providers/auth_provider.dart';
-import 'package:moneymind/core/providers/onboarding_state_provider.dart';
-import 'package:moneymind/core/providers/setup_state_provider.dart';
+import 'package:homa_finance/core/providers/auth_provider.dart';
+import 'package:homa_finance/core/providers/onboarding_state_provider.dart';
+import 'package:homa_finance/core/providers/setup_state_provider.dart';
 
 import '../helpers/test_harness.dart';
 

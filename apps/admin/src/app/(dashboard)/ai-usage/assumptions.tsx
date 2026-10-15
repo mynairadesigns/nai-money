@@ -25,7 +25,7 @@ export function Assumptions({ setting }: { setting: ProviderSetting }) {
       <div>
         <CardTitle>How the estimate is built</CardTitle>
         <p className="mt-2 max-w-prose text-body-md text-on-surface-variant">
-          Nothing in Moneymind records tokens — the counters record calls. Cost
+          Nothing in Homa Finance records tokens — the counters record calls. Cost
           is therefore calls x an assumed prompt and response size x the
           model&rsquo;s list price. Batch, cached-input, and committed-use
           discounts are ignored, so these figures are a list-price ceiling and

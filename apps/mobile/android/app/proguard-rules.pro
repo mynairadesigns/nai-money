@@ -1,4 +1,4 @@
-# Conservative R8 keep rules for Moneymind release builds.
+# Conservative R8 keep rules for Homa Finance release builds.
 # Add to this file when a reflectively-used class gets stripped (look for
 # ClassNotFoundException / NoSuchMethodException in logcat after release).
 

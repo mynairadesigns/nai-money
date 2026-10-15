@@ -118,7 +118,7 @@ export function RevokeButton({
         <p className="text-body-md text-on-surface-variant">
           Remove admin access for <span className="text-on-surface">{who}</span>?
           Their sessions are revoked too, so access ends immediately rather than
-          whenever their cookie would have expired. Their Moneymind account is
+          whenever their cookie would have expired. Their Homa Finance account is
           untouched.
         </p>
       ) : (

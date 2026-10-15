@@ -5,12 +5,12 @@ import 'package:firebase_auth/firebase_auth.dart' show User;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:moneymind/core/providers/auth_provider.dart';
-import 'package:moneymind/core/providers/database_provider.dart';
-import 'package:moneymind/core/providers/firestore_provider.dart';
-import 'package:moneymind/data/local/app_database.dart';
-import 'package:moneymind/data/remote/auth_service.dart';
-import 'package:moneymind/features/billing/providers/premium_providers.dart';
+import 'package:homa_finance/core/providers/auth_provider.dart';
+import 'package:homa_finance/core/providers/database_provider.dart';
+import 'package:homa_finance/core/providers/firestore_provider.dart';
+import 'package:homa_finance/data/local/app_database.dart';
+import 'package:homa_finance/data/remote/auth_service.dart';
+import 'package:homa_finance/features/billing/providers/premium_providers.dart';
 
 /// A fresh in-memory [AppDatabase]. Drift's `onCreate` migration runs lazily
 /// on first query, so all tables exist by the time a test touches them.

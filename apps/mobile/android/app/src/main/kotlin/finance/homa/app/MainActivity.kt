@@ -1,4 +1,4 @@
-package com.devsnack.moneymind
+package finance.homa.app
 
 import io.flutter.embedding.android.FlutterFragmentActivity
 

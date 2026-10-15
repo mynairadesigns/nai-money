@@ -1,9 +1,9 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:moneymind/data/local/app_database.dart';
-import 'package:moneymind/features/home/providers/month_summary_provider.dart';
-import 'package:moneymind/features/transactions/providers/transactions_list_provider.dart';
+import 'package:homa_finance/data/local/app_database.dart';
+import 'package:homa_finance/features/home/providers/month_summary_provider.dart';
+import 'package:homa_finance/features/transactions/providers/transactions_list_provider.dart';
 
 import '../../helpers/test_harness.dart';
 

@@ -37,7 +37,7 @@ describe('toEventRow', () => {
       type: 'INITIAL_PURCHASE',
       appUserId: 'uid-1',
       receivedAt: timestamp(NOW),
-      productId: 'moneymind_premium_monthly',
+      productId: 'homa_premium_monthly',
       expiresAtMs: NOW + 30 * DAY,
       handled: true,
     });
@@ -47,7 +47,7 @@ describe('toEventRow', () => {
       type: 'INITIAL_PURCHASE',
       appUserId: 'uid-1',
       receivedAtMs: NOW,
-      productId: 'moneymind_premium_monthly',
+      productId: 'homa_premium_monthly',
       expiresAtMs: NOW + 30 * DAY,
       handled: true,
     });

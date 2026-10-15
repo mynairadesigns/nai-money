@@ -11,8 +11,8 @@
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Homa Finance — AI-powered personal finance: budgets, savings goals, receipt scanning and an AI money coach.">
-  <meta name="theme-color" content="#faf6f2" media="(prefers-color-scheme: light)">
-  <meta name="theme-color" content="#1c1714" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#fcfcfc" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#141315" media="(prefers-color-scheme: dark)">
 
   <!-- iOS / Android home-screen install -->
   <meta name="mobile-web-app-capable" content="yes">
@@ -27,8 +27,8 @@
 
   <style>
     /* Simple splash while the Flutter engine loads (a few MB on first visit). */
-    html, body { margin: 0; height: 100%; background: #faf6f2; }
-    @media (prefers-color-scheme: dark) { html, body { background: #1c1714; } }
+    html, body { margin: 0; height: 100%; background: #fcfcfc; }
+    @media (prefers-color-scheme: dark) { html, body { background: #141315; } }
     #mm-loading { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; }
     #mm-loading img { width: 72px; height: 72px; border-radius: 18px; animation: mm-pulse 1.4s ease-in-out infinite; }
     @keyframes mm-pulse { 0%,100% { opacity: .55; transform: scale(.96); } 50% { opacity: 1; transform: scale(1); } }
@@ -36,22 +36,22 @@
     /* ---- "Install app" prompt (Android / desktop Chrome + iOS Safari) ---- */
     #hf-install { position: fixed; left: 12px; right: 12px; bottom: 12px; z-index: 2147483000;
       max-width: 460px; margin: 0 auto; display: none; align-items: center; gap: 12px;
-      padding: 12px 12px 12px 14px; border-radius: 16px; background: #fff; color: #1c1714;
+      padding: 12px 12px 12px 14px; border-radius: 16px; background: #fff; color: #141315;
       box-shadow: 0 8px 28px rgba(0,0,0,.18), 0 1px 3px rgba(0,0,0,.08);
       font: 14px/1.35 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
     #hf-install.show { display: flex; animation: hf-up .28s ease-out; }
     @keyframes hf-up { from { transform: translateY(24px); opacity: 0; } to { transform: none; opacity: 1; } }
     #hf-install img { width: 44px; height: 44px; border-radius: 10px; flex: none; }
     #hf-install .t { font-weight: 600; font-size: 15px; }
-    #hf-install .s { color: #5c534d; margin-top: 2px; }
+    #hf-install .s { color: #4d4546; margin-top: 2px; }
     #hf-install .s svg { width: 16px; height: 16px; vertical-align: -3px; }
     #hf-install .grow { flex: 1; min-width: 0; }
     #hf-install button { font: inherit; cursor: pointer; border: 0; }
     #hf-install .go { background: #DA291C; color: #fff; font-weight: 600; padding: 9px 16px; border-radius: 10px; flex: none; }
-    #hf-install .x { background: transparent; color: #8a817b; font-size: 22px; line-height: 1; padding: 4px 6px; flex: none; }
+    #hf-install .x { background: transparent; color: #807475; font-size: 22px; line-height: 1; padding: 4px 6px; flex: none; }
     @media (prefers-color-scheme: dark) {
-      #hf-install { background: #2a221e; color: #f3ece7; }
-      #hf-install .s { color: #c9bdb5; }
+      #hf-install { background: #201f21; color: #e6e1e3; }
+      #hf-install .s { color: #d3c3c3; }
     }
   </style>
 </head>

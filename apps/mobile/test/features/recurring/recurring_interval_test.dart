@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:moneymind/features/recurring/data/recurring_catalog.dart';
+import 'package:homa_finance/features/recurring/data/recurring_catalog.dart';
 
 /// `addRecurringInterval` MUST stay behaviour-identical to the server
 /// `addInterval(...)` in `apps/functions/src/schedulers/process_recurring_rules.ts`

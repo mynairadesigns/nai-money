@@ -1,7 +1,7 @@
 {
   "name": "functions",
   "private": true,
-  "description": "Moneymind Cloud Functions — AI callables, auth triggers, schedulers.",
+  "description": "Homa Finance Cloud Functions — AI callables, auth triggers, schedulers.",
   "engines": {
     "node": "22"
   },

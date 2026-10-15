@@ -1,6 +1,6 @@
-# Moneymind on the web — setup guide
+# Homa Finance on the web — setup guide
 
-This copy of Moneymind builds for **Android, iOS and web** from the same code.
+This copy of Homa Finance builds for **Android, iOS and web** from the same code.
 On web, Premium is sold through **Paystack** instead of the app stores.
 
 Do these steps in order. Steps 1–4 are one-time setup.
@@ -68,8 +68,8 @@ gsutil cors set storage.cors.json gs://YOUR-PROJECT-ID.appspot.com
 ## 3. Set up Paystack
 
 1. **Create two plans.** Paystack dashboard → *Products → Plans → Create plan*.
-   - "Moneymind Premium Monthly", interval **Monthly**, e.g. ₦4,500
-   - "Moneymind Premium Yearly", interval **Annually**, e.g. ₦27,000
+   - "Homa Finance Premium Monthly", interval **Monthly**, e.g. ₦4,500
+   - "Homa Finance Premium Yearly", interval **Annually**, e.g. ₦27,000
 
    Copy each plan code (`PLN_…`). **Prices shown in the app come from these plans**,
    so to change a price, change it in Paystack.
