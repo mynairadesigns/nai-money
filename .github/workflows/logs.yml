@@ -8,6 +8,9 @@ on:
       hours:
         description: How many hours back
         default: "3"
+      service:
+        description: Cloud Run service to dump app logs for (e.g. aicoachchat)
+        default: "aicoachchat"
 
 permissions:
   contents: write
@@ -39,6 +42,10 @@ jobs:
             --project "$FIREBASE_PROJECT_ID" --format=json > out/logs/iam-getpaystackprices.json 2>&1 || true
           gcloud run services get-iam-policy aicoachchat --region europe-west1 \
             --project "$FIREBASE_PROJECT_ID" --format=json > out/logs/iam-aicoachchat.json 2>&1 || true
+          gcloud logging read \
+            "resource.type=\"cloud_run_revision\" AND resource.labels.service_name=\"${{ inputs.service }}\" AND NOT logName:\"requests\"" \
+            --project "$FIREBASE_PROJECT_ID" --freshness="${{ inputs.hours }}h" --limit=40 --order=desc \
+            --format='value(timestamp,severity,textPayload,jsonPayload.message)' > out/logs/service.txt || true
           wc -l out/logs/*
       - name: Commit to diagnostics branch
         run: |
