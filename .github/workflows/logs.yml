@@ -54,6 +54,18 @@ jobs:
           curl -s "https://generativelanguage.googleapis.com/v1beta/models?pageSize=200&key=$GEMINI_API_KEY" \
             | python3 -c "import json,sys; d=json.load(sys.stdin); print('\n'.join(m['name']+'  '+','.join(m.get('supportedGenerationMethods',[])) for m in d.get('models',[])) or json.dumps(d)[:500])" \
             > out/logs/gemini-models.txt || true
+      - name: Check Paystack key ↔ plans
+        env:
+          PSK: ${{ secrets.PAYSTACK_SECRET_KEY }}
+        run: |
+          {
+            case "$PSK" in sk_test_*) echo "key mode: TEST";; sk_live_*) echo "key mode: LIVE";; "") echo "key: MISSING";; *) echo "key: unrecognised format";; esac
+            for code in PLN_9tu60881jrzlm1s PLN_m27whyg9iekjjo0; do
+              echo "$code → $(curl -s -H "Authorization: Bearer $PSK" https://api.paystack.co/plan/$code | python3 -c 'import json,sys; d=json.load(sys.stdin); x=d.get("data") or {}; print(d.get("message"), "|", x.get("name"), x.get("interval"), x.get("amount"), x.get("currency"), "| integration", x.get("integration"))')"
+            done
+            echo "plans visible to this key:"
+            curl -s -H "Authorization: Bearer $PSK" "https://api.paystack.co/plan?perPage=20" | python3 -c 'import json,sys; d=json.load(sys.stdin); [print(" ", p["plan_code"], p["name"], p["interval"], p["amount"]) for p in (d.get("data") or [])] or print("  none:", d.get("message"))'
+          } > out/logs/paystack.txt 2>&1
       - name: Commit to diagnostics branch
         run: |
           cd out
