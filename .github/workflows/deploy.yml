@@ -69,16 +69,29 @@ jobs:
 
       # ---------- Deploy ----------
       - name: Authenticate to Google Cloud
+        env:
+          SA_JSON: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
         run: |
-          echo '${{ secrets.FIREBASE_SERVICE_ACCOUNT }}' > "$RUNNER_TEMP/sa.json"
+          if [ -z "$SA_JSON" ]; then
+            echo "::error::FIREBASE_SERVICE_ACCOUNT secret is missing — add it under Settings → Secrets and variables → Actions"
+            exit 1
+          fi
+          printf '%s' "$SA_JSON" > "$RUNNER_TEMP/sa.json"
           echo "GOOGLE_APPLICATION_CREDENTIALS=$RUNNER_TEMP/sa.json" >> "$GITHUB_ENV"
 
       - name: Deploy to Firebase
-        run: >
-          firebase deploy
-          --project "$FIREBASE_PROJECT_ID"
-          --only hosting,functions,firestore,storage
-          --non-interactive --force
+        run: |
+          set -o pipefail
+          if ! firebase deploy --project "$FIREBASE_PROJECT_ID" \
+              --only hosting,functions,firestore,storage \
+              --non-interactive --force 2>&1 | tee "$RUNNER_TEMP/deploy.log"; then
+            # Surface the real error as annotations (visible in the run summary).
+            grep -iE "error|denied|permission|not enabled|failed" "$RUNNER_TEMP/deploy.log" \
+              | grep -v "^\s*$" | tail -15 | while IFS= read -r line; do
+                echo "::error::${line//%/%25}"
+              done
+            exit 1
+          fi
 
       # Lets the browser read receipt images back from Storage.
       - uses: google-github-actions/auth@v2
