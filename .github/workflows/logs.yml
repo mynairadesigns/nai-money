@@ -1,0 +1,42 @@
+# Diagnostics: pulls the last few hours of Cloud Functions warnings/errors
+# and commits them to the `diagnostics` branch (logs/functions.txt).
+name: Fetch function logs
+
+on:
+  workflow_dispatch:
+    inputs:
+      hours:
+        description: How many hours back
+        default: "3"
+
+permissions:
+  contents: write
+
+env:
+  FIREBASE_PROJECT_ID: nai-money
+
+jobs:
+  logs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+      - uses: google-github-actions/setup-gcloud@v2
+      - name: Read logs
+        run: |
+          mkdir -p out/logs
+          gcloud logging read \
+            '(resource.type="cloud_run_revision" OR resource.type="cloud_function") AND severity>=WARNING' \
+            --project "$FIREBASE_PROJECT_ID" --freshness="${{ inputs.hours }}h" --limit=200 --order=desc \
+            --format='table[no-heading](timestamp,resource.labels.service_name,resource.labels.function_name,severity,textPayload,jsonPayload.message,protoPayload.status.message)' \
+            > out/logs/functions.txt || echo "gcloud failed: $?" >> out/logs/functions.txt
+          wc -l out/logs/functions.txt
+      - name: Commit to diagnostics branch
+        run: |
+          cd out
+          git init -q -b diagnostics
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add -A && git commit -qm "Function logs $(date -u +%FT%TZ)"
+          git push -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" diagnostics
