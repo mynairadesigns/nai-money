@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import '../../../core/theme/shapes.dart';
 import '../../../core/theme/spacing.dart';
 import '../../../core/widgets/brand_logo.dart';
+import '../../billing/widgets/upsell_sheet.dart';
 import '../data/chat_message.dart';
 import '../providers/chat_controller.dart';
 import '../providers/chat_providers.dart';
@@ -96,12 +97,14 @@ class _CoachChatScreenState extends ConsumerState<CoachChatScreen> {
     _inputCtrl.clear();
   }
 
+  static const _kQuotaMessage = 'AI quota reached for this month';
+
   String _errorMessageFor(Object error) {
     if (error is FirebaseFunctionsException) {
       final code = error.code;
       if (code == 'resource-exhausted' ||
           (error.message?.toLowerCase().contains('quota') ?? false)) {
-        return 'AI quota reached for this month';
+        return _kQuotaMessage;
       }
     }
     return "Couldn't reach Coach Homa";
@@ -117,6 +120,12 @@ class _CoachChatScreenState extends ConsumerState<CoachChatScreen> {
     ref.listen<AsyncValue<void>>(chatControllerProvider, (prev, next) {
       if (next.hasError && !next.isLoading) {
         final msg = _errorMessageFor(next.error!);
+        if (msg == _kQuotaMessage) {
+          // Free allowance used up → offer Premium instead of a dead end.
+          ScaffoldMessenger.of(context).hideCurrentSnackBar();
+          showUpsellSheet(context, UpsellReason.ai);
+          return;
+        }
         ScaffoldMessenger.of(context)
           ..hideCurrentSnackBar()
           ..showSnackBar(SnackBar(content: Text(msg)));

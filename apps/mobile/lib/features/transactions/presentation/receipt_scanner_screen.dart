@@ -143,14 +143,30 @@ class _ReceiptScannerScreenState extends ConsumerState<ReceiptScannerScreen> {
 
   void _failAndPop(String message) {
     if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+    final isQuota = message == _kQuotaMessage;
+    final router = GoRouter.of(context);
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        duration: Duration(seconds: isQuota ? 8 : 4),
+        action: isQuota
+            ? SnackBarAction(
+                label: 'Upgrade',
+                onPressed: () => router.push('/paywall'),
+              )
+            : null,
+      ),
+    );
     context.pop();
   }
+
+  static const _kQuotaMessage =
+      "You've used this month's free receipt scans. Upgrade to Premium for unlimited scans.";
 
   String _friendlyAiError(Object e) {
     final msg = e.toString().toLowerCase();
     if (msg.contains('quota') || msg.contains('limit')) {
-      return 'You\'ve used your AI actions for this month.';
+      return _kQuotaMessage;
     }
     if (msg.contains('network') || msg.contains('unavailable')) {
       return 'Couldn\'t reach the AI service. Try again in a moment.';

@@ -48,8 +48,10 @@ class _UpsellSheet extends StatelessWidget {
               width: double.infinity,
               child: FilledButton(
                 onPressed: () {
+                  // Grab the router before the sheet's context is torn down.
+                  final router = GoRouter.of(context);
                   Navigator.of(context).pop();
-                  context.push('/paywall');
+                  router.push('/paywall');
                 },
                 style: FilledButton.styleFrom(
                   shape: const RoundedRectangleBorder(
@@ -87,8 +89,8 @@ class _UpsellSheet extends StatelessWidget {
         );
       case UpsellReason.ai:
         return (
-          'Unlimited AI actions',
-          'The free plan includes a small monthly AI budget. Upgrade for unlimited receipt scans, coach chats, and insights.',
+          "You've used this month's free AI",
+          'The free plan includes 10 uses of each AI feature per month. Upgrade to Premium for unlimited Coach Homa chats, receipt scans and insights.',
         );
       case UpsellReason.categories:
         return (
