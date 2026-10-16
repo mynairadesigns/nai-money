@@ -66,8 +66,12 @@ jobs:
         run: |
           IMAGE="$REGION-docker.pkg.dev/$PROJECT/homa/admin:${GITHUB_SHA::12}"
           gcloud auth configure-docker "$REGION-docker.pkg.dev" --quiet
-          docker build -f apps/admin/Dockerfile -t "$IMAGE" .
-          docker push "$IMAGE"
+          if ! docker build --progress=plain -f apps/admin/Dockerfile -t "$IMAGE" . > build.log 2>&1; then
+            tail -60 build.log
+            grep -iE "error|ERR_|failed|not found|cannot" build.log | tail -12 | while IFS= read -r l; do echo "::error::${l:0:300}"; done
+            exit 1
+          fi
+          if ! docker push "$IMAGE" > push.log 2>&1; then tail -5 push.log | while IFS= read -r l; do echo "::error::$l"; done; exit 1; fi
           echo "IMAGE=$IMAGE" >> "$GITHUB_ENV"
 
       - name: Deploy to Cloud Run
