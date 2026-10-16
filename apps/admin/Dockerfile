@@ -13,7 +13,7 @@
 
 FROM node:22-slim AS base
 ENV PNPM_HOME="/pnpm" PATH="/pnpm:$PATH"
-RUN corepack enable
+RUN corepack enable && corepack prepare pnpm@9.15.9 --activate
 
 # ---- Install workspace dependencies -----------------------------------------
 FROM base AS deps
