@@ -1,0 +1,46 @@
+# Grants (or revokes) admin-panel access for an existing Homa Finance account.
+# The person must already have an account (sign up on homa.finance first).
+name: Grant admin access
+
+on:
+  workflow_dispatch:
+    inputs:
+      email:
+        description: Account email
+        required: true
+      action:
+        description: grant or revoke
+        default: grant
+
+env:
+  PROJECT: nai-money
+
+jobs:
+  grant:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Set claim
+        env:
+          SA_JSON: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          EMAIL: ${{ inputs.email }}
+          ACTION: ${{ inputs.action }}
+        run: |
+          printf '%s' "$SA_JSON" > "$RUNNER_TEMP/sa.json"
+          export GOOGLE_APPLICATION_CREDENTIALS="$RUNNER_TEMP/sa.json"
+          npm init -y >/dev/null && npm install firebase-admin@13 >/dev/null 2>&1
+          cat > g.js <<'JS'
+          const admin = require('firebase-admin');
+          admin.initializeApp({ projectId: process.env.PROJECT });
+          (async () => {
+            const u = await admin.auth().getUserByEmail(process.env.EMAIL);
+            const claims = { ...(u.customClaims || {}) };
+            if (process.env.ACTION === 'revoke') delete claims.admin; else claims.admin = true;
+            await admin.auth().setCustomUserClaims(u.uid, claims);
+            await admin.auth().revokeRefreshTokens(u.uid); // force a fresh token with the claim
+            console.log(`${process.env.ACTION === 'revoke' ? 'Revoked' : 'Granted'} admin for ${u.email} (${u.uid})`);
+          })().catch((e) => { console.log(`::error::${e.message}`); process.exit(1); });
+          JS
+          node g.js

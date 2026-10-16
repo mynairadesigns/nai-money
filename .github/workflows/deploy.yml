@@ -86,7 +86,7 @@ jobs:
           set -o pipefail
           deploy() {
             firebase deploy --project "$FIREBASE_PROJECT_ID" \
-              --only hosting,functions,firestore,storage \
+              --only hosting:nai-money,functions,firestore,storage \
               --non-interactive --force 2>&1 | tee "$RUNNER_TEMP/deploy.log"
           }
           # New projects often throttle the first batch of function builds

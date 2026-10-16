@@ -1,0 +1,92 @@
+# Builds the admin panel (apps/admin, Next.js) into a container, runs it on
+# Cloud Run (europe-west1), and serves it through the Firebase Hosting site
+# `homa-finance-admin` so it can live on admin.homa.finance.
+name: Deploy admin panel
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "apps/admin/**"
+      - ".github/workflows/deploy-admin.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-admin
+  cancel-in-progress: false
+
+env:
+  PROJECT: nai-money
+  REGION: europe-west1
+  SERVICE: homa-admin
+  SITE: homa-finance-admin
+  RUNTIME_SA: homa-admin-runtime
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+      - uses: google-github-actions/setup-gcloud@v2
+
+      - name: Enable APIs + one-time infra
+        run: |
+          gcloud services enable run.googleapis.com artifactregistry.googleapis.com \
+            firebasehosting.googleapis.com --project "$PROJECT" --quiet
+          gcloud artifacts repositories describe homa --location "$REGION" --project "$PROJECT" >/dev/null 2>&1 \
+            || gcloud artifacts repositories create homa --repository-format=docker \
+                 --location "$REGION" --project "$PROJECT" --quiet
+          SA="$RUNTIME_SA@$PROJECT.iam.gserviceaccount.com"
+          gcloud iam service-accounts describe "$SA" --project "$PROJECT" >/dev/null 2>&1 \
+            || gcloud iam service-accounts create "$RUNTIME_SA" --display-name "Homa admin panel runtime" --project "$PROJECT"
+          # Least-privilege-ish: Firebase (Auth, Firestore, Remote Config) + read-only ops views.
+          for role in roles/firebase.admin roles/datastore.user roles/firebaseauth.admin \
+                      roles/cloudconfig.admin roles/logging.viewer roles/monitoring.viewer \
+                      roles/cloudscheduler.viewer roles/serviceusage.serviceUsageConsumer; do
+            gcloud projects add-iam-policy-binding "$PROJECT" --member "serviceAccount:$SA" \
+              --role "$role" --condition=None --quiet >/dev/null
+          done
+          echo "RUNTIME_SA_EMAIL=$SA" >> "$GITHUB_ENV"
+
+      - name: Build + push image
+        run: |
+          IMAGE="$REGION-docker.pkg.dev/$PROJECT/homa/admin:${GITHUB_SHA::12}"
+          gcloud auth configure-docker "$REGION-docker.pkg.dev" --quiet
+          docker build -f apps/admin/Dockerfile -t "$IMAGE" .
+          docker push "$IMAGE"
+          echo "IMAGE=$IMAGE" >> "$GITHUB_ENV"
+
+      - name: Deploy to Cloud Run
+        run: |
+          gcloud run deploy "$SERVICE" --image "$IMAGE" --region "$REGION" --project "$PROJECT" \
+            --service-account "$RUNTIME_SA_EMAIL" --allow-unauthenticated \
+            --memory 512Mi --cpu 1 --min-instances 0 --max-instances 3 \
+            --set-env-vars "GOOGLE_CLOUD_PROJECT=$PROJECT,NEXT_PUBLIC_FIREBASE_PROJECT_ID=$PROJECT" --quiet
+
+      # Firebase Hosting in front of Cloud Run → custom domain + CDN.
+      # (The panel's session cookie is `__session`, the one cookie Hosting forwards.)
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Create Hosting site (first run) + deploy rewrite
+        env:
+          SA_JSON: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+        run: |
+          npm install -g firebase-tools >/dev/null 2>&1
+          printf '%s' "$SA_JSON" > "$RUNNER_TEMP/sa.json"
+          export GOOGLE_APPLICATION_CREDENTIALS="$RUNNER_TEMP/sa.json"
+          firebase hosting:sites:get "$SITE" --project "$PROJECT" >/dev/null 2>&1 \
+            || firebase hosting:sites:create "$SITE" --project "$PROJECT" --non-interactive
+          firebase deploy --only "hosting:$SITE" --project "$PROJECT" --non-interactive --force
+
+      - name: URLs
+        run: |
+          {
+            echo "Cloud Run: $(gcloud run services describe "$SERVICE" --region "$REGION" --project "$PROJECT" --format='value(status.url)')"
+            echo "Hosting:   https://$SITE.web.app"
+          } >> "$GITHUB_STEP_SUMMARY"

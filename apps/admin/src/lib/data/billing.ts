@@ -421,6 +421,22 @@ export async function refreshEntitlement(uid: string): Promise<RefreshResult> {
     premiumExpiryMs: toMillis(data?.premiumExpiry),
   };
 
+  // Web subscribers pay through Paystack, which RevenueCat knows nothing
+  // about — a RevenueCat "not premium" answer must not downgrade them.
+  const source = (data as { premiumSource?: string } | undefined)?.premiumSource;
+  if (
+    source === 'paystack' &&
+    before.premiumStatus === 'premium' &&
+    (before.premiumExpiryMs ?? 0) > Date.now()
+  ) {
+    return {
+      ok: false,
+      failure: { kind: 'upstream', detail: 'paystack-entitlement' },
+      message:
+        'This user has an active Premium plan bought on the web via Paystack. RevenueCat refresh skipped — nothing was written.',
+    };
+  }
+
   const lookup = await fetchEntitlement(uid, apiKey);
   if (!lookup.ok) {
     return {
