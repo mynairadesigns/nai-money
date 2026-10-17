@@ -48,6 +48,18 @@ jobs:
         working-directory: apps/mobile
         run: flutter build web --release
 
+      - name: Pre-launch password gate
+        env:
+          SITE_PASSWORD: ${{ secrets.SITE_PASSWORD }}
+        run: |
+          if [ -n "$SITE_PASSWORD" ]; then
+            HASH=$(printf '%s' "homa-gate:$SITE_PASSWORD" | sha256sum | cut -d' ' -f1)
+            sed -i "s/__HF_GATE_HASH__/$HASH/" apps/mobile/build/web/index.html
+            echo "Password gate: ON"
+          else
+            echo "Password gate: off (SITE_PASSWORD secret not set)"
+          fi
+
       # ---------- Cloud Functions ----------
       - name: Install workspace deps
         run: pnpm install --frozen-lockfile || pnpm install --no-frozen-lockfile

@@ -53,6 +53,27 @@
       #hf-install { background: #201f21; color: #e6e1e3; }
       #hf-install .s { color: #d3c3c3; }
     }
+
+    /* ---- Pre-launch password gate (enabled when the deploy injects a hash) ---- */
+    #hf-gate { position: fixed; inset: 0; z-index: 2147483600; display: none; align-items: center;
+      justify-content: center; background: #fcfcfc; font: 15px/1.4 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; color: #1b1b1f; }
+    #hf-gate.show { display: flex; }
+    #hf-gate form { width: min(340px, calc(100vw - 48px)); text-align: center; }
+    #hf-gate img { width: 72px; height: 72px; border-radius: 16px; margin-bottom: 18px; }
+    #hf-gate h1 { font-size: 20px; margin: 0 0 6px; }
+    #hf-gate p { margin: 0 0 18px; color: #4d4546; }
+    #hf-gate input { width: 100%; box-sizing: border-box; font: inherit; padding: 12px 14px; border-radius: 12px;
+      border: 1px solid #d3c3c3; background: #fff; color: inherit; outline: none; }
+    #hf-gate input:focus { border-color: #DA291C; box-shadow: 0 0 0 3px rgba(218,41,28,.15); }
+    #hf-gate button { width: 100%; margin-top: 12px; font: inherit; font-weight: 600; padding: 12px; border: 0;
+      border-radius: 12px; background: #DA291C; color: #fff; cursor: pointer; }
+    #hf-gate .err { color: #B3261E; min-height: 20px; margin-top: 10px; font-size: 14px; }
+    @media (prefers-color-scheme: dark) {
+      #hf-gate { background: #141315; color: #e6e1e3; }
+      #hf-gate p { color: #d3c3c3; }
+      #hf-gate input { background: #201f21; border-color: #4d4546; }
+      #hf-gate button { background: #EF3B2D; }
+    }
   </style>
 </head>
 <body>
@@ -143,6 +164,53 @@
       }
     })();
   </script>
-  <script src="flutter_bootstrap.js" async></script>
+  <div id="hf-gate" role="dialog" aria-label="Enter password">
+    <form id="hf-gate-form" autocomplete="off">
+      <img src="icons/Icon-192.png" alt="Homa Finance">
+      <h1>Homa Finance</h1>
+      <p>We're not open yet. Enter the access password to continue.</p>
+      <input id="hf-gate-pw" type="password" placeholder="Password" autocomplete="current-password" required>
+      <button type="submit">Continue</button>
+      <div class="err" id="hf-gate-err"></div>
+    </form>
+  </div>
+  <script>
+    // Pre-launch gate. The deploy workflow replaces the placeholder below with
+    // SHA-256("homa-gate:" + password) when the SITE_PASSWORD secret is set;
+    // left as-is (secret unset) the gate is off and the app loads normally.
+    (function () {
+      var HASH = '__HF_GATE_HASH__';
+      var KEY = 'hf_gate_ok';
+      function boot() {
+        var s = document.createElement('script');
+        s.src = 'flutter_bootstrap.js'; s.async = true;
+        document.body.appendChild(s);
+      }
+      if (HASH.indexOf('__') === 0) { boot(); return; }          // gate disabled
+      try { if (localStorage.getItem(KEY) === HASH) { boot(); return; } } catch (e) {}
+      var meta = document.createElement('meta'); meta.name = 'robots'; meta.content = 'noindex, nofollow';
+      document.head.appendChild(meta);
+      var gate = document.getElementById('hf-gate');
+      var loading = document.getElementById('mm-loading'); if (loading) loading.remove();
+      gate.classList.add('show');
+      document.getElementById('hf-gate-pw').focus();
+      async function sha256(t) {
+        var b = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(t));
+        return Array.from(new Uint8Array(b)).map(function (x) { return x.toString(16).padStart(2, '0'); }).join('');
+      }
+      document.getElementById('hf-gate-form').addEventListener('submit', async function (e) {
+        e.preventDefault();
+        var pw = document.getElementById('hf-gate-pw').value;
+        var h = await sha256('homa-gate:' + pw);
+        if (h === HASH) {
+          try { localStorage.setItem(KEY, HASH); } catch (err) {}
+          gate.remove(); boot();
+        } else {
+          document.getElementById('hf-gate-err').textContent = 'Incorrect password.';
+          document.getElementById('hf-gate-pw').select();
+        }
+      });
+    })();
+  </script>
 </body>
 </html>
