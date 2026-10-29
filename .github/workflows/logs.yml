@@ -66,6 +66,10 @@ jobs:
             echo "plans visible to this key:"
             curl -s -H "Authorization: Bearer $PSK" "https://api.paystack.co/plan?perPage=20" | python3 -c 'import json,sys; d=json.load(sys.stdin); [print(" ", p["plan_code"], p["name"], p["interval"], p["amount"]) for p in (d.get("data") or [])] or print("  none:", d.get("message"))'
           } > out/logs/paystack.txt 2>&1
+      - name: Deploy key identity (public email only)
+        env:
+          SA_JSON: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+        run: printf '%s' "$SA_JSON" | python3 -c 'import json,sys; print(json.load(sys.stdin)["client_email"])' > out/logs/deploy-key-email.txt
       - name: Commit to diagnostics branch
         run: |
           cd out
