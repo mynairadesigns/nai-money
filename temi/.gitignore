@@ -1,0 +1,74 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# IDEs
+.idea/
+.vscode/
+*.iml
+*.swp
+*.swo
+
+# Claude Code (local workflow config, not part of deliverable)
+.claude/
+
+# Node / pnpm (apps/functions, apps/admin, packages/*)
+node_modules/
+dist/
+.next/
+.turbo/
+.vercel/
+*.tsbuildinfo
+.pnpm-debug.log
+.pnpm-store/
+
+# Next.js generated type shim — regenerated on every build
+apps/admin/next-env.d.ts
+
+# npm artifacts — pnpm is the workspace tool of record (CLAUDE.md §4)
+package-lock.json
+
+# Env files — never commit secrets
+.env
+.env.*
+!.env.example
+
+# Firebase CLI project selection — records the seller's project id, and each
+# buyer picks their own with `firebase use`. Written by `firebase init`.
+.firebaserc
+
+# App Hosting environment overrides — real project values live here.
+# The base `apphosting.yaml` IS tracked (buyers need it as a template) and must
+# stay blank; this pattern needs a segment between the dots, so it matches
+# apphosting.production.yaml / .local.yaml / .emulator.yaml but never the base.
+apphosting.*.yaml
+
+# Firebase
+.firebase/
+firebase-debug.log
+firebase-debug.*.log
+ui-debug.log
+firestore-debug.log
+*-debug.log
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Coverage / test output
+coverage/
+.nyc_output/
+
+# Generated docs / build output (root-level)
+build/
+out/
+
+# OS / misc
+Thumbs.db
+ehthumbs.db
+Desktop.ini

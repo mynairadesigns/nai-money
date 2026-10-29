@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!--
+    `$FLUTTER_BASE_HREF` is replaced by `flutter build web --base-href`.
+    Leave it as-is when hosting at the domain root.
+  -->
+  <base href="$FLUTTER_BASE_HREF">
+
+  <meta charset="UTF-8">
+  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Temi Finance — AI-powered personal finance: budgets, savings goals, receipt scanning and an AI money coach.">
+  <meta name="theme-color" content="#fcfcfc" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#141315" media="(prefers-color-scheme: dark)">
+
+  <!-- iOS / Android home-screen install -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Temi Finance">
+  <link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-icon.png">
+
+  <link rel="icon" type="image/png" href="favicon.png"/>
+  <link rel="manifest" href="manifest.json">
+  <title>Temi Finance</title>
+
+  <style>
+    /* Simple splash while the Flutter engine loads (a few MB on first visit). */
+    html, body { margin: 0; height: 100%; background: #fcfcfc; }
+    @media (prefers-color-scheme: dark) { html, body { background: #141315; } }
+    #mm-loading { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; }
+    #mm-loading img { width: 72px; height: 72px; border-radius: 18px; animation: mm-pulse 1.4s ease-in-out infinite; }
+    @keyframes mm-pulse { 0%,100% { opacity: .55; transform: scale(.96); } 50% { opacity: 1; transform: scale(1); } }
+
+    /* ---- "Install app" prompt (Android / desktop Chrome + iOS Safari) ---- */
+    #hf-install { position: fixed; left: 12px; right: 12px; bottom: 12px; z-index: 2147483000;
+      max-width: 460px; margin: 0 auto; display: none; align-items: center; gap: 12px;
+      padding: 12px 12px 12px 14px; border-radius: 16px; background: #fff; color: #141315;
+      box-shadow: 0 8px 28px rgba(0,0,0,.18), 0 1px 3px rgba(0,0,0,.08);
+      font: 14px/1.35 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+    #hf-install.show { display: flex; animation: hf-up .28s ease-out; }
+    @keyframes hf-up { from { transform: translateY(24px); opacity: 0; } to { transform: none; opacity: 1; } }
+    #hf-install img { width: 44px; height: 44px; border-radius: 10px; flex: none; }
+    #hf-install .t { font-weight: 600; font-size: 15px; }
+    #hf-install .s { color: #4d4546; margin-top: 2px; }
+    #hf-install .s svg { width: 16px; height: 16px; vertical-align: -3px; }
+    #hf-install .grow { flex: 1; min-width: 0; }
+    #hf-install button { font: inherit; cursor: pointer; border: 0; }
+    #hf-install .go { background: #DA291C; color: #fff; font-weight: 600; padding: 9px 16px; border-radius: 10px; flex: none; }
+    #hf-install .x { background: transparent; color: #807475; font-size: 22px; line-height: 1; padding: 4px 6px; flex: none; }
+    @media (prefers-color-scheme: dark) {
+      #hf-install { background: #201f21; color: #e6e1e3; }
+      #hf-install .s { color: #d3c3c3; }
+    }
+
+    /* ---- Pre-launch password gate (enabled when the deploy injects a hash) ---- */
+    #hf-gate { position: fixed; inset: 0; z-index: 2147483600; display: none; align-items: center;
+      justify-content: center; background: #fcfcfc; font: 15px/1.4 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; color: #1b1b1f; }
+    #hf-gate.show { display: flex; }
+    #hf-gate form { width: min(340px, calc(100vw - 48px)); text-align: center; }
+    #hf-gate img { width: 72px; height: 72px; border-radius: 16px; margin-bottom: 18px; }
+    #hf-gate h1 { font-size: 20px; margin: 0 0 6px; }
+    #hf-gate p { margin: 0 0 18px; color: #4d4546; }
+    #hf-gate input { width: 100%; box-sizing: border-box; font: inherit; padding: 12px 14px; border-radius: 12px;
+      border: 1px solid #d3c3c3; background: #fff; color: inherit; outline: none; }
+    #hf-gate input:focus { border-color: #DA291C; box-shadow: 0 0 0 3px rgba(218,41,28,.15); }
+    #hf-gate button { width: 100%; margin-top: 12px; font: inherit; font-weight: 600; padding: 12px; border: 0;
+      border-radius: 12px; background: #DA291C; color: #fff; cursor: pointer; }
+    #hf-gate .err { color: #B3261E; min-height: 20px; margin-top: 10px; font-size: 14px; }
+    @media (prefers-color-scheme: dark) {
+      #hf-gate { background: #141315; color: #e6e1e3; }
+      #hf-gate p { color: #d3c3c3; }
+      #hf-gate input { background: #201f21; border-color: #4d4546; }
+      #hf-gate button { background: #EF3B2D; }
+    }
+  </style>
+</head>
+<body>
+  <div id="mm-loading"><img src="icons/Icon-192.png" alt="Temi Finance"></div>
+  <script>
+    // Remove the splash as soon as Flutter paints its first frame.
+    window.addEventListener('flutter-first-frame', function () {
+      var el = document.getElementById('mm-loading');
+      if (el) el.remove();
+    });
+    // Fallback in case the event is missed.
+    setTimeout(function () {
+      var el = document.getElementById('mm-loading');
+      if (el) el.remove();
+    }, 20000);
+  </script>
+  <div id="hf-install" role="dialog" aria-label="Install Temi Finance">
+    <img src="icons/Icon-192.png" alt="">
+    <div class="grow">
+      <div class="t">Install Temi Finance</div>
+      <div class="s" id="hf-install-sub">Add it to your home screen for one-tap access.</div>
+    </div>
+    <button class="go" id="hf-install-go" type="button">Install</button>
+    <button class="x" id="hf-install-x" type="button" aria-label="Dismiss">&times;</button>
+  </div>
+  <script>
+    // "Add to home screen" prompt. Android/desktop Chrome & Edge fire
+    // `beforeinstallprompt`, which we turn into an Install button. iOS has no
+    // install API, so Safari users get short "Share → Add to Home Screen"
+    // instructions instead. Dismissals are remembered for 7 days.
+    (function () {
+      var KEY = 'temi_install_dismissed_at', WAIT_MS = 7 * 24 * 3600 * 1000;
+      var box = document.getElementById('hf-install');
+      var sub = document.getElementById('hf-install-sub');
+      var go = document.getElementById('hf-install-go');
+      var deferred = null, appReady = false, pendingShow = false;
+
+      function standalone() {
+        return (window.matchMedia && matchMedia('(display-mode: standalone)').matches) ||
+               window.navigator.standalone === true;
+      }
+      function recentlyDismissed() {
+        try { return Date.now() - Number(localStorage.getItem(KEY) || 0) < WAIT_MS; } catch (e) { return false; }
+      }
+      function show() {
+        if (standalone() || recentlyDismissed()) return;
+        if (!appReady) { pendingShow = true; return; }
+        setTimeout(function () { box.classList.add('show'); }, 2500);
+      }
+      function hide(remember) {
+        box.classList.remove('show');
+        if (remember) { try { localStorage.setItem(KEY, String(Date.now())); } catch (e) {} }
+      }
+
+      window.addEventListener('flutter-first-frame', function () {
+        appReady = true;
+        if (pendingShow) show();
+      });
+      // Fallback if the first-frame event is missed.
+      setTimeout(function () { appReady = true; if (pendingShow) show(); }, 8000);
+
+      document.getElementById('hf-install-x').onclick = function () { hide(true); };
+
+      // Android / desktop Chromium.
+      window.addEventListener('beforeinstallprompt', function (e) {
+        e.preventDefault();
+        deferred = e;
+        show();
+      });
+      go.onclick = function () {
+        if (!deferred) { hide(true); return; }
+        deferred.prompt();
+        deferred.userChoice.then(function (r) { hide(r && r.outcome !== 'accepted'); deferred = null; });
+      };
+      window.addEventListener('appinstalled', function () { hide(false); });
+
+      // iOS / iPadOS (Safari, plus Chrome/Edge on iOS 16.4+ via their share menu).
+      var ua = navigator.userAgent || '';
+      var isIOS = /iphone|ipad|ipod/i.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+      var inAppBrowser = /FBAN|FBAV|Instagram|Line\/|Twitter|TikTok/i.test(ua);
+      if (isIOS && !inAppBrowser) {
+        sub.innerHTML = 'Tap <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" ' +
+          'stroke-linecap="round" stroke-linejoin="round" aria-label="Share"><path d="M12 15V3"/>' +
+          '<path d="M8 7l4-4 4 4"/><path d="M5 11v8a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-8"/></svg> ' +
+          'then <b>Add to Home Screen</b>.';
+        go.style.display = 'none';
+        show();
+      }
+    })();
+  </script>
+  <div id="hf-gate" role="dialog" aria-label="Enter password">
+    <form id="hf-gate-form" autocomplete="off">
+      <img src="icons/Icon-192.png" alt="Temi Finance">
+      <h1>Temi Finance</h1>
+      <p>We're not open yet. Enter the access password to continue.</p>
+      <input id="hf-gate-pw" type="password" placeholder="Password" autocomplete="current-password" required>
+      <button type="submit">Continue</button>
+      <div class="err" id="hf-gate-err"></div>
+    </form>
+  </div>
+  <script>
+    // Pre-launch gate. The deploy workflow replaces the placeholder below with
+    // SHA-256("temi-gate:" + password) when the SITE_PASSWORD secret is set;
+    // left as-is (secret unset) the gate is off and the app loads normally.
+    (function () {
+      var HASH = '__HF_GATE_HASH__';
+      var KEY = 'temi_gate_ok';
+      function boot() {
+        var s = document.createElement('script');
+        s.src = 'flutter_bootstrap.js'; s.async = true;
+        document.body.appendChild(s);
+      }
+      if (HASH.indexOf('__') === 0) { boot(); return; }          // gate disabled
+      try { if (localStorage.getItem(KEY) === HASH) { boot(); return; } } catch (e) {}
+      var meta = document.createElement('meta'); meta.name = 'robots'; meta.content = 'noindex, nofollow';
+      document.head.appendChild(meta);
+      var gate = document.getElementById('hf-gate');
+      var loading = document.getElementById('mm-loading'); if (loading) loading.remove();
+      gate.classList.add('show');
+      document.getElementById('hf-gate-pw').focus();
+      async function sha256(t) {
+        var b = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(t));
+        return Array.from(new Uint8Array(b)).map(function (x) { return x.toString(16).padStart(2, '0'); }).join('');
+      }
+      document.getElementById('hf-gate-form').addEventListener('submit', async function (e) {
+        e.preventDefault();
+        var pw = document.getElementById('hf-gate-pw').value;
+        var h = await sha256('temi-gate:' + pw);
+        if (h === HASH) {
+          try { localStorage.setItem(KEY, HASH); } catch (err) {}
+          gate.remove(); boot();
+        } else {
+          document.getElementById('hf-gate-err').textContent = 'Incorrect password.';
+          document.getElementById('hf-gate-pw').select();
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

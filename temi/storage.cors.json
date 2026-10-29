@@ -1,0 +1,8 @@
+[
+  {
+    "origin": ["https://temi.finance", "https://www.temi.finance", "https://temi-finance.web.app", "https://temi-finance.firebaseapp.com", "http://localhost:5000"],
+    "method": ["GET", "HEAD"],
+    "maxAgeSeconds": 3600,
+    "responseHeader": ["Content-Type"]
+  }
+]

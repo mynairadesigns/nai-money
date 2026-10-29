@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Temi Finance — Quick Start</title>
+<style>
+  :root{
+    --brand:#8a4f37; --brand-dark:#582712; --brand-soft:#b0694a;
+    --surface:#fff8f5; --bg:#ffffff; --text:#1e1b18; --text-muted:#53433e;
+    --border:#d8c2bb; --secondary:#526256; --warning:#b65b00;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);line-height:1.6;font-size:16px;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;}
+  header{background:linear-gradient(135deg,var(--brand),var(--brand-soft));color:#fff;
+    padding:48px 24px;text-align:center}
+  header h1{margin:0 0 6px;font-size:2rem}
+  header p{margin:0;opacity:.95}
+  .wrap{max-width:860px;margin:0 auto;padding:0 24px}
+  h2{font-size:1.35rem;color:var(--brand-dark);margin:34px 0 10px}
+  h3{font-size:1.05rem;margin:20px 0 6px}
+  a{color:var(--brand)}
+  code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;background:var(--surface);
+    border:1px solid var(--border);border-radius:6px;padding:1px 6px;font-size:.86em;color:var(--brand-dark)}
+  pre{background:#1e1b18;color:#f3e9e3;border-radius:12px;padding:16px 18px;overflow:auto;
+    font-size:.86rem;line-height:1.5}
+  pre code{background:none;border:none;color:inherit;padding:0}
+  ol.steps{counter-reset:s;list-style:none;padding:0}
+  ol.steps>li{position:relative;padding:14px 0 14px 52px;border-top:1px solid var(--border)}
+  ol.steps>li:first-child{border-top:none}
+  ol.steps>li::before{counter-increment:s;content:counter(s);position:absolute;left:0;top:14px;
+    width:34px;height:34px;border-radius:50%;background:var(--brand);color:#fff;
+    display:flex;align-items:center;justify-content:center;font-weight:700}
+  ol.steps>li b{display:block;margin-bottom:4px}
+  table{width:100%;border-collapse:collapse;margin:14px 0;border:1px solid var(--border);
+    border-radius:12px;overflow:hidden}
+  th,td{text-align:left;padding:10px 12px;font-size:.9rem;vertical-align:top}
+  th{background:var(--brand);color:#fff}
+  tbody tr:nth-child(even){background:var(--surface)}
+  .warn{background:#fdf3e7;border-left:4px solid var(--warning);border-radius:12px;
+    padding:14px 16px;margin:16px 0;font-size:.92rem}
+  .warn strong{color:var(--brand-dark)}
+  footer{padding:36px 24px;text-align:center;color:var(--text-muted);font-size:.88rem}
+</style>
+</head>
+<body>
+<header>
+  <h1>Temi Finance — Quick Start</h1>
+  <p>From the downloaded zip to a running app in ~20 minutes</p>
+</header>
+
+<div class="wrap">
+  <p>This is the fast path. The full reference — Firebase, secrets, Remote
+  Config, monetization, release — is in the included documentation.</p>
+
+  <h2>Prerequisites</h2>
+  <ul>
+    <li>Flutter 3.x (Dart ≥ 3.11)</li>
+    <li>A Firebase project on the <strong>Blaze</strong> plan (Functions need it)</li>
+    <li>Node 22 + <code>pnpm</code> (for the Functions workspace)</li>
+    <li>Xcode (iOS simulator) and/or Android Studio (emulator)</li>
+    <li>The Firebase CLI (<code>npm i -g firebase-tools</code>) + FlutterFire CLI
+      (<code>dart pub global activate flutterfire_cli</code>)</li>
+  </ul>
+
+  <h2>Steps</h2>
+  <ol class="steps">
+    <li><b>Install dependencies</b>
+      Extract the zip, then:
+      <pre><code class="bash">pnpm install            # repo root — Functions workspace
+cd apps/mobile && flutter pub get</code></pre>
+    </li>
+    <li><b>Wire your Firebase project</b>
+      From <code>apps/mobile</code>:
+      <pre><code class="bash">flutterfire configure</code></pre>
+      Generates <code>lib/firebase_options.dart</code> and drops
+      <code>google-services.json</code> / <code>GoogleService-Info.plist</code>.
+      In the Firebase console, enable Authentication, Firestore, Storage, and
+      Remote Config.
+    </li>
+    <li><b>Deploy the backend</b>
+      Set the five Function secrets — <code>OPENAI_API_KEY</code>,
+      <code>GEMINI_API_KEY</code>, <code>EXCHANGERATE_API_KEY</code>,
+      <code>REVENUECAT_WEBHOOK_SECRET</code>, <code>REVENUECAT_API_KEY</code> — then:
+      <pre><code class="bash">firebase deploy --only firestore:rules,firestore:indexes,storage,functions</code></pre>
+    </li>
+    <li><b>Codegen (only if you change models)</b>
+      <pre><code class="bash">dart run build_runner build --delete-conflicting-outputs</code></pre>
+    </li>
+    <li><b>Run the app</b>
+      <pre><code class="bash">flutter run</code></pre>
+      Sign up with email + password; the setup flow seeds your first wallet.
+    </li>
+    <li><b>(Optional) Light up AI + monetization + social sign-in</b>
+      Set the Remote Config keys + secrets and the social providers (full
+      reference in the included documentation). The app runs fine without them — AI entry points degrade
+      gracefully, the paywall shows an unconfigured state, and ads stay hidden.
+    </li>
+  </ol>
+
+  <div class="warn"><strong>The app won't build until step 2.</strong> The Android
+  <code>google-services</code> Gradle plugin needs <code>google-services.json</code>,
+  and <code>main.dart</code> imports <code>firebase_options.dart</code> — both are
+  gitignored and produced by <code>flutterfire configure</code>.</div>
+
+  <h2>Build commands</h2>
+  <pre><code class="bash"># from apps/mobile
+flutter build appbundle --release   # Android
+flutter build ipa --release         # iOS
+
+# tests
+flutter test                        # client
+pnpm -F functions test              # server</code></pre>
+
+  <h2>Customization quick reference</h2>
+  <table>
+    <thead><tr><th>Knob</th><th>Where</th></tr></thead>
+    <tbody>
+      <tr><td>Brand color</td><td><code>apps/mobile/lib/core/theme/colors.dart</code></td></tr>
+      <tr><td>Font</td><td><code>apps/mobile/lib/core/theme/typography.dart</code> (Sora by default)</td></tr>
+      <tr><td>App name / bundle id</td><td><code>pubspec.yaml</code>, Android <code>build.gradle.kts</code> + manifest, iOS <code>Info.plist</code> + Xcode</td></tr>
+      <tr><td>Free-tier ceilings, prices, AI provider</td><td>Firebase Remote Config</td></tr>
+      <tr><td>AI quota / rate limit</td><td>Server — <code>free_tier_ai_quota</code> + <code>enforceRateLimit</code></td></tr>
+      <tr><td>Backend region</td><td><code>apps/functions/src/utils/region.ts</code> + client <code>FirebaseFunctions.instanceFor</code></td></tr>
+    </tbody>
+  </table>
+
+  <h2>Troubleshooting</h2>
+  <table>
+    <thead><tr><th>Symptom</th><th>Fix</th></tr></thead>
+    <tbody>
+      <tr><td>Paywall says "not configured"</td><td><code>revenuecat_api_key_*</code> not published in Remote Config (or <code>initRemoteConfig()</code> couldn't fetch)</td></tr>
+      <tr><td>Purchase succeeds but stays Free</td><td>RevenueCat entitlement isn't named exactly <code>premium</code>, or no product is attached</td></tr>
+      <tr><td>"Couldn't run the detector" (Subscriptions)</td><td>Deploy Functions + <code>firestore:indexes</code> (the <code>recurringRules</code> composite index ships in <code>firestore.indexes.json</code>)</td></tr>
+      <tr><td>AI action returns <code>resource-exhausted</code></td><td>Monthly <code>free_tier_ai_quota</code> reached for a free user (premium bypasses)</td></tr>
+      <tr><td>Biometric prompt crashes / does nothing</td><td><code>MainActivity</code> must extend <code>FlutterFragmentActivity</code> (it does); iOS needs <code>NSFaceIDUsageDescription</code> (present)</td></tr>
+      <tr><td>Notifications never fire</td><td>Android needs <code>POST_NOTIFICATIONS</code> + <code>RECEIVE_BOOT_COMPLETED</code> + the two manifest receivers</td></tr>
+      <tr><td>Google sign-in fails / nothing happens</td><td>Android: app SHA-1 not registered in Firebase (re-run <code>flutterfire configure</code>); iOS: <code>REVERSED_CLIENT_ID</code> URL scheme missing. Also enable the Google provider in Firebase Auth</td></tr>
+      <tr><td>Apple button isn't showing</td><td>By design — iOS-only (<code>social_sign_in_buttons.dart</code>). On iOS, add the Xcode "Sign in with Apple" capability + enable the Apple provider</td></tr>
+      <tr><td><code>build_runner</code> conflicts</td><td>Run with <code>--delete-conflicting-outputs</code></td></tr>
+      <tr><td>Release build fails with "keystore not found" / missing signing</td><td>Copy <code>android/key.properties.example</code> → <code>android/key.properties</code>, fill in your <code>.jks</code> path + passwords (see <a href="index.html#signing">index.html §15</a>)</td></tr>
+      <tr><td>R8 strips a class my code reflects on (ClassNotFoundException in release)</td><td>Add a <code>-keep</code> rule to <code>android/app/proguard-rules.pro</code> and rebuild</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Support</h2>
+  <p>Email <a href="mailto:devsnack26@gmail.com">devsnack26@gmail.com</a> ·
+  WhatsApp <a href="https://wa.me/855967413911">+855&nbsp;96&nbsp;741&nbsp;3911</a>
+  — 6 months bundled.</p>
+</div>
+
+<footer>Temi Finance v1.0.0 · devsnack26@gmail.com · WhatsApp +855 96 741 3911</footer>
+</body>
+</html>

@@ -11,6 +11,9 @@ name: Deploy
 on:
   push:
     branches: [main]
+    paths-ignore:
+      - "temi/**"
+      - ".github/workflows/temi-*.yml"
   workflow_dispatch:
 
 concurrency:

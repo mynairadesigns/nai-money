@@ -1,0 +1,150 @@
+# Builds the Flutter web app and deploys everything to Firebase on every
+# push to `main` (or manually from the Actions tab).
+#
+# Needs (repo → Settings → Secrets and variables → Actions):
+#   Secret   FIREBASE_SERVICE_ACCOUNT   service-account JSON (see DEPLOY.md)
+#   Variable PAYSTACK_PLAN_MONTHLY / PAYSTACK_PLAN_YEARLY     (optional, PLN_…)
+#   Variable PAYSTACK_LIFETIME_AMOUNT  kobo, 0 = off          (optional)
+#   Variable PAYSTACK_ALLOWED_ORIGINS  e.g. https://x.web.app (optional)
+name: "Temi: Deploy"
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "temi/**"
+      - ".github/workflows/temi-deploy.yml"
+      - "!temi/apps/admin/**"
+  workflow_dispatch:
+
+concurrency:
+  group: temi-deploy
+  cancel-in-progress: false
+
+env:
+  FIREBASE_PROJECT_ID: temi-finance
+
+defaults:
+  run:
+    working-directory: temi
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install pnpm + Firebase CLI
+        run: npm install -g pnpm@9 firebase-tools
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      # ---------- Flutter web ----------
+      - name: Flutter pub get
+        working-directory: temi/apps/mobile
+        run: flutter pub get
+
+      - name: Build web
+        working-directory: temi/apps/mobile
+        run: flutter build web --release
+
+      - name: Pre-launch password gate
+        env:
+          SITE_PASSWORD: ${{ secrets.TEMI_SITE_PASSWORD }}
+        run: |
+          if [ -n "$SITE_PASSWORD" ]; then
+            HASH=$(printf '%s' "temi-gate:$SITE_PASSWORD" | sha256sum | cut -d' ' -f1)
+            sed -i "s/__HF_GATE_HASH__/$HASH/" apps/mobile/build/web/index.html
+            echo "Password gate: ON"
+          else
+            echo "Password gate: off (SITE_PASSWORD secret not set)"
+          fi
+
+      # ---------- Cloud Functions ----------
+      - name: Install workspace deps
+        run: pnpm install --frozen-lockfile || pnpm install --no-frozen-lockfile
+
+      - name: Test functions
+        run: pnpm -F functions test
+
+      - name: Write functions .env (Paystack config)
+        working-directory: temi/apps/functions
+        run: |
+          {
+            echo "PAYSTACK_PLAN_MONTHLY=${{ vars.TEMI_PAYSTACK_PLAN_MONTHLY || '' }}"
+            echo "PAYSTACK_PLAN_YEARLY=${{ vars.TEMI_PAYSTACK_PLAN_YEARLY || '' }}"
+            echo "PAYSTACK_LIFETIME_AMOUNT=${{ vars.TEMI_PAYSTACK_LIFETIME_AMOUNT || '9900000' }}"
+            echo "PAYSTACK_CURRENCY=${{ vars.TEMI_PAYSTACK_CURRENCY || 'NGN' }}"
+            echo "GEMINI_MODEL_FAST=${{ vars.GEMINI_MODEL_FAST || 'gemini-3.5-flash-lite' }}"
+            echo "GEMINI_MODEL_VISION=${{ vars.GEMINI_MODEL_VISION || 'gemini-3.5-flash' }}"
+            echo "PAYSTACK_ALLOWED_ORIGINS=${{ vars.TEMI_PAYSTACK_ALLOWED_ORIGINS || format('https://temi.finance,https://www.temi.finance,https://{0}.web.app,https://{0}.firebaseapp.com', env.FIREBASE_PROJECT_ID) }}"
+          } > .env
+          cat .env
+
+      # ---------- Deploy ----------
+      - name: Authenticate to Google Cloud
+        env:
+          SA_JSON: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+        run: |
+          if [ -z "$SA_JSON" ]; then
+            echo "::error::FIREBASE_SERVICE_ACCOUNT secret is missing — add it under Settings → Secrets and variables → Actions"
+            exit 1
+          fi
+          printf '%s' "$SA_JSON" > "$RUNNER_TEMP/sa.json"
+          echo "GOOGLE_APPLICATION_CREDENTIALS=$RUNNER_TEMP/sa.json" >> "$GITHUB_ENV"
+
+      - name: Deploy to Firebase
+        run: |
+          set -o pipefail
+          deploy() {
+            firebase deploy --project "$FIREBASE_PROJECT_ID" \
+              --only hosting:temi-finance,functions,firestore,storage \
+              --non-interactive --force 2>&1 | tee "$RUNNER_TEMP/deploy.log"
+          }
+          # New projects often throttle the first batch of function builds
+          # ("Build failed ... unexpected error"); a retry deploys the rest.
+          if ! deploy && { echo "Retrying in 90s…"; sleep 90; ! deploy; } && { echo "Retrying in 180s…"; sleep 180; ! deploy; }; then
+            # Surface the real error as annotations (visible in the run summary).
+            grep -iE "error|denied|permission|not enabled|failed" "$RUNNER_TEMP/deploy.log" \
+              | grep -v "^\s*$" | tail -15 | while IFS= read -r line; do
+                echo "::error::${line//%/%25}"
+              done
+            exit 1
+          fi
+
+      # Lets the browser read receipt images back from Storage.
+      - uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+      - uses: google-github-actions/setup-gcloud@v2
+      # A function whose very first build failed can end up without the
+      # public invoker binding, so the browser gets 401 before our code runs.
+      # Callables check Firebase Auth themselves; webhooks verify signatures.
+      - name: Ensure HTTPS functions are publicly invokable
+        continue-on-error: true
+        run: |
+          for svc in getfxrate suggestcategory scanreceipt aicoachchat forecastspending \
+                     detectanomalies computehealthscore generateweeklyrecap generatebudgetplan \
+                     generatesavingsplan detectsubscriptions confirmsubscription \
+                     handlerevenuecatwebhook refreshentitlement getpaystackprices \
+                     startpaystackcheckout verifypaystackpayment getpaystackmanagelink \
+                     handlepaystackwebhook; do
+            gcloud run services add-iam-policy-binding "$svc" --region europe-west1 \
+              --project "$FIREBASE_PROJECT_ID" --member=allUsers --role=roles/run.invoker \
+              --quiet > /dev/null && echo "✓ $svc" || echo "::warning::invoker binding failed for $svc"
+          done
+
+      - name: Apply Storage CORS
+        continue-on-error: true
+        run: gcloud storage buckets update "gs://$FIREBASE_PROJECT_ID.firebasestorage.app" --cors-file=storage.cors.json
+
+      - name: Live URL
+        run: echo "🚀 https://$FIREBASE_PROJECT_ID.web.app" >> "$GITHUB_STEP_SUMMARY"

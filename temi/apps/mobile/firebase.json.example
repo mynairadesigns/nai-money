@@ -1,0 +1,43 @@
+{
+  "__comment": [
+    "Shape template for the FlutterFire CLI manifest. The real firebase.json is",
+    "gitignored because it records a specific Firebase project and its per-platform",
+    "app ids — the seller's project must never ship to buyers.",
+    "",
+    "You do not need to copy or edit this file. Running `flutterfire configure`",
+    "from apps/mobile generates the real firebase.json for YOUR project, together",
+    "with lib/firebase_options.dart, android/app/google-services.json, and",
+    "ios/Runner/GoogleService-Info.plist (all gitignored, all with .example",
+    "siblings like this one).",
+    "",
+    "It is kept only so the expected shape is visible without running the CLI."
+  ],
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "your-project-id",
+          "appId": "1:000000000000:android:0000000000000000000000",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "ios": {
+        "default": {
+          "projectId": "your-project-id",
+          "appId": "1:000000000000:ios:0000000000000000000000",
+          "uploadDebugSymbols": false,
+          "fileOutput": "ios/Runner/GoogleService-Info.plist"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "your-project-id",
+          "configurations": {
+            "android": "1:000000000000:android:0000000000000000000000",
+            "ios": "1:000000000000:ios:0000000000000000000000"
+          }
+        }
+      }
+    }
+  }
+}

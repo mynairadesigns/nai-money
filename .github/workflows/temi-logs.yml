@@ -1,0 +1,80 @@
+# Diagnostics: pulls the last few hours of Cloud Functions warnings/errors
+# and commits them to the `diagnostics-temi` branch (logs/functions.txt).
+name: "Temi: Fetch function logs"
+
+on:
+  workflow_dispatch:
+    inputs:
+      hours:
+        description: How many hours back
+        default: "3"
+      service:
+        description: Cloud Run service to dump app logs for (e.g. aicoachchat)
+        default: "aicoachchat"
+
+permissions:
+  contents: write
+
+env:
+  FIREBASE_PROJECT_ID: temi-finance
+
+defaults:
+  run:
+    working-directory: temi
+
+jobs:
+  logs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+      - uses: google-github-actions/setup-gcloud@v2
+      - name: Read logs
+        run: |
+          mkdir -p out/logs
+          gcloud logging read \
+            '(resource.type="cloud_run_revision" OR resource.type="cloud_function") AND severity>=WARNING' \
+            --project "$FIREBASE_PROJECT_ID" --freshness="${{ inputs.hours }}h" --limit=200 --order=desc \
+            --format='table[no-heading](timestamp,resource.labels.service_name,resource.labels.function_name,severity,textPayload,jsonPayload.message,protoPayload.status.message)' \
+            > out/logs/functions.txt || echo "gcloud failed: $?" >> out/logs/functions.txt
+          gcloud logging read \
+            '(resource.type="cloud_run_revision" OR resource.type="cloud_function") AND severity>=ERROR' \
+            --project "$FIREBASE_PROJECT_ID" --freshness="${{ inputs.hours }}h" --limit=15 --order=desc \
+            --format=json > out/logs/errors.json || true
+          gcloud run services get-iam-policy getpaystackprices --region europe-west1 \
+            --project "$FIREBASE_PROJECT_ID" --format=json > out/logs/iam-getpaystackprices.json 2>&1 || true
+          gcloud run services get-iam-policy aicoachchat --region europe-west1 \
+            --project "$FIREBASE_PROJECT_ID" --format=json > out/logs/iam-aicoachchat.json 2>&1 || true
+          gcloud logging read \
+            "resource.type=\"cloud_run_revision\" AND resource.labels.service_name=\"${{ inputs.service }}\" AND NOT logName:\"requests\"" \
+            --project "$FIREBASE_PROJECT_ID" --freshness="${{ inputs.hours }}h" --limit=40 --order=desc \
+            --format='value(timestamp,severity,textPayload,jsonPayload.message)' > out/logs/service.txt || true
+          wc -l out/logs/*
+      - name: List Gemini models available to this key
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: |
+          curl -s "https://generativelanguage.googleapis.com/v1beta/models?pageSize=200&key=$GEMINI_API_KEY" \
+            | python3 -c "import json,sys; d=json.load(sys.stdin); print('\n'.join(m['name']+'  '+','.join(m.get('supportedGenerationMethods',[])) for m in d.get('models',[])) or json.dumps(d)[:500])" \
+            > out/logs/gemini-models.txt || true
+      - name: Check Paystack key ↔ plans
+        env:
+          PSK: ${{ secrets.TEMI_PAYSTACK_SECRET_KEY }}
+        run: |
+          {
+            case "$PSK" in sk_test_*) echo "key mode: TEST";; sk_live_*) echo "key mode: LIVE";; "") echo "key: MISSING";; *) echo "key: unrecognised format";; esac
+            for code in ${{ vars.TEMI_PAYSTACK_PLAN_MONTHLY }} ${{ vars.TEMI_PAYSTACK_PLAN_YEARLY }}; do
+              echo "$code → $(curl -s -H "Authorization: Bearer $PSK" https://api.paystack.co/plan/$code | python3 -c 'import json,sys; d=json.load(sys.stdin); x=d.get("data") or {}; print(d.get("message"), "|", x.get("name"), x.get("interval"), x.get("amount"), x.get("currency"), "| integration", x.get("integration"))')"
+            done
+            echo "plans visible to this key:"
+            curl -s -H "Authorization: Bearer $PSK" "https://api.paystack.co/plan?perPage=20" | python3 -c 'import json,sys; d=json.load(sys.stdin); [print(" ", p["plan_code"], p["name"], p["interval"], p["amount"]) for p in (d.get("data") or [])] or print("  none:", d.get("message"))'
+          } > out/logs/paystack.txt 2>&1
+      - name: Commit to diagnostics-temi branch
+        run: |
+          cd out
+          git init -q -b diagnostics-temi
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add -A && git commit -qm "Function logs $(date -u +%FT%TZ)"
+          git push -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" diagnostics-temi

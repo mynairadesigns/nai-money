@@ -1,0 +1,8 @@
+# Copy to key.properties (same dir) and fill in your release keystore values.
+# key.properties is gitignored — never commit it. See
+# docs/codecanyon/index.html §14 (App signing) for the full walkthrough.
+
+storePassword=YOUR_KEYSTORE_PASSWORD
+keyPassword=YOUR_KEY_PASSWORD
+keyAlias=YOUR_KEY_ALIAS
+storeFile=/absolute/path/to/your/release-key.jks

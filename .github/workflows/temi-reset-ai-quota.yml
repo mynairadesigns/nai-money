@@ -1,0 +1,62 @@
+# Admin tool: clears this month's free-tier AI usage counters.
+# Leave "email" blank to reset everyone, or enter one user's email.
+name: "Temi: Reset AI quota"
+
+on:
+  workflow_dispatch:
+    inputs:
+      email:
+        description: User email (blank = all users)
+        required: false
+        default: ""
+
+env:
+  FIREBASE_PROJECT_ID: temi-finance
+
+defaults:
+  run:
+    working-directory: temi
+
+jobs:
+  reset:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Authenticate
+        env:
+          SA_JSON: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+        run: |
+          printf '%s' "$SA_JSON" > "$RUNNER_TEMP/sa.json"
+          echo "GOOGLE_APPLICATION_CREDENTIALS=$RUNNER_TEMP/sa.json" >> "$GITHUB_ENV"
+      - name: Reset
+        env:
+          EMAIL: ${{ inputs.email }}
+        run: |
+          npm init -y > /dev/null && npm install firebase-admin@13 > /dev/null 2>&1
+          cat > reset.js <<'JS'
+          const admin = require('firebase-admin');
+          admin.initializeApp({ projectId: process.env.FIREBASE_PROJECT_ID });
+          (async () => {
+            const db = admin.firestore();
+            const d = new Date();
+            const ym = `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, '0')}`;
+            let uids = [];
+            if (process.env.EMAIL) {
+              uids = [(await admin.auth().getUserByEmail(process.env.EMAIL)).uid];
+            } else {
+              let token;
+              do {
+                const page = await admin.auth().listUsers(1000, token);
+                uids.push(...page.users.map((u) => u.uid));
+                token = page.pageToken;
+              } while (token);
+            }
+            for (const uid of uids) {
+              await db.doc(`users/${uid}/aiUsage/${ym}`).delete();
+            }
+            console.log(`Reset ${ym} AI usage for ${uids.length} user(s)`);
+          })().catch((e) => { console.error(e); process.exit(1); });
+          JS
+          node reset.js
