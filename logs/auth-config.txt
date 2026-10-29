@@ -1,0 +1,4 @@
+== authorized domains
+['localhost', 'temi-finance.firebaseapp.com', 'temi-finance.web.app', 'temi-finance-admin.web.app', 'admin.temi.finance', 'temi.finance', 'www.temi.finance']
+== google provider
+{'enabled': True, 'clientId': '160705895217-53k6n150rejks2bs33mvh4unohqlvk7u.apps.googleusercontent.com'}

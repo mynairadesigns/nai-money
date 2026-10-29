@@ -1,0 +1,87 @@
+[
+  {
+    "insertId": "17caz6dd4uke",
+    "logName": "projects/temi-finance/logs/cloudaudit.googleapis.com%2Factivity",
+    "protoPayload": {
+      "@type": "type.googleapis.com/google.cloud.audit.AuditLog",
+      "authenticationInfo": {
+        "oauthInfo": {
+          "oauthClientId": "111194817459070465279"
+        },
+        "principalEmail": "firebase-adminsdk-fbsvc@nai-money.iam.gserviceaccount.com",
+        "principalSubject": "serviceAccount:firebase-adminsdk-fbsvc@nai-money.iam.gserviceaccount.com"
+      },
+      "authorizationInfo": [
+        {
+          "granted": true,
+          "permission": "cloudfunctions.functions.create",
+          "permissionType": "ADMIN_WRITE",
+          "resource": "projects/temi-finance/locations/europe-west1/functions/processRecurringRules",
+          "resourceAttributes": {
+            "name": "projects/temi-finance/locations/europe-west1/functions/processRecurringRules",
+            "service": "cloudfunctions.googleapis.com",
+            "type": "cloudfunctions.googleapis.com/Function"
+          }
+        }
+      ],
+      "methodName": "google.cloud.functions.v2.FunctionService.CreateFunction",
+      "request": {
+        "@type": "type.googleapis.com/google.cloud.functions.v2.CreateFunctionRequest",
+        "function": {
+          "build_config": {
+            "entry_point": "processRecurringRules",
+            "runtime": "nodejs22",
+            "source": {}
+          },
+          "labels": {
+            "deployment-scheduled": "true",
+            "deployment-tool": "cli-firebase",
+            "firebase-functions-hash": "dabd9fea6bc90e4351b08e2854c6873caa56c69b"
+          },
+          "name": "projects/temi-finance/locations/europe-west1/functions/processRecurringRules",
+          "service_config": {
+            "available_cpu": "1",
+            "available_memory": "512Mi",
+            "max_instance_request_concurrency": 80,
+            "timeout_seconds": 540
+          }
+        },
+        "parent": "projects/temi-finance/locations/europe-west1"
+      },
+      "requestMetadata": {
+        "callerIp": "135.119.108.57",
+        "callerSuppliedUserAgent": "FirebaseCLI/15.34.2,gzip(gfe),gzip(gfe)",
+        "destinationAttributes": {},
+        "requestAttributes": {
+          "auth": {},
+          "time": "2026-10-29T10:11:56.060089532Z"
+        }
+      },
+      "resourceLocation": {
+        "currentLocations": [
+          "europe-west1"
+        ]
+      },
+      "resourceName": "projects/temi-finance/locations/europe-west1/functions/processRecurringRules",
+      "response": {
+        "@type": "type.googleapis.com/google.longrunning.Operation"
+      },
+      "serviceName": "cloudfunctions.googleapis.com",
+      "status": {
+        "code": 10,
+        "message": "Could not create bucket gcf-v2-sources-160705895217-europe-west1. "
+      }
+    },
+    "receiveTimestamp": "2026-10-29T10:11:57.951615667Z",
+    "resource": {
+      "labels": {
+        "function_name": "processRecurringRules",
+        "project_id": "temi-finance",
+        "region": "europe-west1"
+      },
+      "type": "cloud_function"
+    },
+    "severity": "ERROR",
+    "timestamp": "2026-10-29T10:11:57.272485292Z"
+  }
+]

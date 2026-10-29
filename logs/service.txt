@@ -1,0 +1,11 @@
+2026-10-29T10:59:26.438334Z	INFO		
+2026-10-29T10:59:25.059974Z	INFO		
+2026-10-29T10:59:24.983401Z	INFO	Default STARTUP TCP probe succeeded after 1 attempt for container "worker" on port 8080.	
+2026-10-29T10:59:20.853759Z	INFO	Starting new instance. Reason: DEPLOYMENT_ROLLOUT - Instance started due to traffic shifting between revisions due to deployment, traffic split adjustment, or deployment health check.	
+2026-10-29T10:59:18.000929Z	NOTICE		
+2026-10-29T10:59:16.948831Z	NOTICE		
+2026-10-29T10:13:26.530403Z	INFO		
+2026-10-29T10:13:25.174788Z	INFO		
+2026-10-29T10:13:25.088462Z	INFO	Default STARTUP TCP probe succeeded after 1 attempt for container "worker" on port 8080.	
+2026-10-29T10:13:20.952315Z	INFO	Starting new instance. Reason: DEPLOYMENT_ROLLOUT - Instance started due to traffic shifting between revisions due to deployment, traffic split adjustment, or deployment health check.	
+2026-10-29T10:13:17.072857Z	NOTICE		

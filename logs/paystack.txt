@@ -1,0 +1,8 @@
+key mode: TEST
+PLN_3sr7ukjst73r3j4 → Plan retrieved | TF Monthly monthly 290000 NGN | integration 1151672
+PLN_hpd8yvdaib8a49m → Plan retrieved | TF Yearly annually 2900000 NGN | integration 1151672
+plans visible to this key:
+  PLN_hpd8yvdaib8a49m TF Yearly annually 2900000
+  PLN_3sr7ukjst73r3j4 TF Monthly monthly 290000
+  PLN_hxbuwmktcx6gzeb HF Yearly annually 2900000
+  PLN_uzavsxs91t6kusd HF Monthly monthly 290000
