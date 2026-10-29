@@ -1,0 +1,1 @@
+firebase-adminsdk-fbsvc@nai-money.iam.gserviceaccount.com

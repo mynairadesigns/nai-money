@@ -1,0 +1,4 @@
+== authorized domains
+['localhost', 'nai-money.firebaseapp.com', 'nai-money.web.app', 'www.homa.finance', 'homa.finance', 'admin.homa.finance', 'homa-finance-admin.web.app']
+== google provider
+{'enabled': True, 'clientId': '924103830011-5pe8a0qggqhl5u4cva8vreh030e4heec.apps.googleusercontent.com'}
