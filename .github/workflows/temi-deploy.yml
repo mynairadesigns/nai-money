@@ -79,8 +79,8 @@ jobs:
         working-directory: temi/apps/functions
         run: |
           {
-            echo "PAYSTACK_PLAN_MONTHLY=${{ vars.TEMI_PAYSTACK_PLAN_MONTHLY || '' }}"
-            echo "PAYSTACK_PLAN_YEARLY=${{ vars.TEMI_PAYSTACK_PLAN_YEARLY || '' }}"
+            echo "PAYSTACK_PLAN_MONTHLY=${{ vars.TEMI_PAYSTACK_PLAN_MONTHLY || 'PLN_3sr7ukjst73r3j4' }}"
+            echo "PAYSTACK_PLAN_YEARLY=${{ vars.TEMI_PAYSTACK_PLAN_YEARLY || 'PLN_hpd8yvdaib8a49m' }}"
             echo "PAYSTACK_LIFETIME_AMOUNT=${{ vars.TEMI_PAYSTACK_LIFETIME_AMOUNT || '9900000' }}"
             echo "PAYSTACK_CURRENCY=${{ vars.TEMI_PAYSTACK_CURRENCY || 'NGN' }}"
             echo "GEMINI_MODEL_FAST=${{ vars.GEMINI_MODEL_FAST || 'gemini-3.5-flash-lite' }}"

@@ -60,7 +60,7 @@ jobs:
         run: |
           {
             case "$PSK" in sk_test_*) echo "key mode: TEST";; sk_live_*) echo "key mode: LIVE";; "") echo "key: MISSING";; *) echo "key: unrecognised format";; esac
-            for code in ${{ vars.TEMI_PAYSTACK_PLAN_MONTHLY }} ${{ vars.TEMI_PAYSTACK_PLAN_YEARLY }}; do
+            for code in PLN_3sr7ukjst73r3j4 PLN_hpd8yvdaib8a49m; do
               echo "$code → $(curl -s -H "Authorization: Bearer $PSK" https://api.paystack.co/plan/$code | python3 -c 'import json,sys; d=json.load(sys.stdin); x=d.get("data") or {}; print(d.get("message"), "|", x.get("name"), x.get("interval"), x.get("amount"), x.get("currency"), "| integration", x.get("integration"))')"
             done
             echo "plans visible to this key:"
