@@ -129,7 +129,7 @@ jobs:
           T=$(gcloud auth print-access-token)
           URL="https://identitytoolkit.googleapis.com/admin/v2/projects/nai-money/config"
           CUR=$(curl -s -H "Authorization: Bearer $T" -H "x-goog-user-project: nai-money" "$URL")
-          BODY=$(printf '%s' "$CUR" | python3 -c 'import json,sys; d=json.load(sys.stdin); want=['homa.finance', 'www.homa.finance', 'admin.homa.finance', 'homa-finance-admin.web.app']; cur=d.get("authorizedDomains",[]); print(json.dumps({"authorizedDomains": cur+[x for x in want if x not in cur]}))')
+          BODY=$(printf '%s' "$CUR" | python3 -c 'import json,sys; d=json.load(sys.stdin); want=["homa.finance", "www.homa.finance", "admin.homa.finance", "homa-finance-admin.web.app"]; cur=d.get("authorizedDomains",[]); print(json.dumps({"authorizedDomains": cur+[x for x in want if x not in cur]}))')
           curl -s -X PATCH -H "Authorization: Bearer $T" -H "x-goog-user-project: nai-money" -H "Content-Type: application/json" \
             "$URL?updateMask=authorizedDomains" -d "$BODY" | python3 -c 'import json,sys; print("authorized:", json.load(sys.stdin).get("authorizedDomains"))'
 
