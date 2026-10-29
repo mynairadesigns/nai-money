@@ -90,7 +90,7 @@ class _UpsellSheet extends StatelessWidget {
       case UpsellReason.ai:
         return (
           "You've used this month's free AI",
-          'The free plan includes 10 uses of each AI feature per month. Upgrade to Premium for unlimited Coach Temi chats, receipt scans and insights.',
+          'The free plan includes 10 uses of each AI feature per month. Upgrade to Premium for unlimited Coach Tems chats, receipt scans and insights.',
         );
       case UpsellReason.categories:
         return (

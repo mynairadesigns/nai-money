@@ -107,7 +107,7 @@ class _CoachChatScreenState extends ConsumerState<CoachChatScreen> {
         return _kQuotaMessage;
       }
     }
-    return "Couldn't reach Coach Temi";
+    return "Couldn't reach Coach Tems";
   }
 
   @override
@@ -138,7 +138,7 @@ class _CoachChatScreenState extends ConsumerState<CoachChatScreen> {
           icon: const Icon(Icons.close),
           onPressed: () => context.pop(),
         ),
-        title: const Text('Coach Temi'),
+        title: const Text('Coach Tems'),
         actions: [
           PopupMenuButton<String>(
             onSelected: (v) {
@@ -588,7 +588,7 @@ class _Composer extends StatelessWidget {
                 textInputAction: TextInputAction.newline,
                 enabled: enabled,
                 decoration: const InputDecoration(
-                  hintText: 'Ask Coach Temi...',
+                  hintText: 'Ask Coach Tems...',
                   counterText: '',
                 ),
               ),

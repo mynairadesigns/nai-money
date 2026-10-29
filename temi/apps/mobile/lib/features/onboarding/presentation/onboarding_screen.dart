@@ -28,7 +28,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
     _OnboardingPage(
       icon: Icons.auto_awesome_outlined,
       title: 'AI does the heavy lifting',
-      body: 'Scan receipts and chat with Coach Temi about your money.',
+      body: 'Scan receipts and chat with Coach Tems about your money.',
     ),
     _OnboardingPage(
       icon: Icons.flag_outlined,

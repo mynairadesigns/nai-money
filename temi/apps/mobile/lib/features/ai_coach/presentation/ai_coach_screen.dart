@@ -52,7 +52,7 @@ class AICoachScreen extends StatelessWidget {
               child: FilledButton.icon(
                 onPressed: () => context.push('/ai/chat'),
                 icon: const Icon(Icons.chat_bubble_outline),
-                label: const Text('Chat with Coach Temi'),
+                label: const Text('Chat with Coach Tems'),
               ),
             ),
           ],

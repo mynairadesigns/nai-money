@@ -613,7 +613,7 @@ class _AIBudgetStep extends StatelessWidget {
           Text('You\'re all set', style: theme.textTheme.headlineMedium),
           const SizedBox(height: AppSpacing.sm),
           Text(
-            'Tap Finish to start tracking. Once you have a few transactions, Coach Temi can propose a personalized monthly budget for you.',
+            'Tap Finish to start tracking. Once you have a few transactions, Coach Tems can propose a personalized monthly budget for you.',
             style: theme.textTheme.bodyMedium?.copyWith(
               color: theme.colorScheme.onSurfaceVariant,
             ),
