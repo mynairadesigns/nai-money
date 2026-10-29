@@ -15,10 +15,6 @@ on:
 env:
   PROJECT: temi-finance
 
-defaults:
-  run:
-    working-directory: temi
-
 jobs:
   grant:
     runs-on: ubuntu-latest
